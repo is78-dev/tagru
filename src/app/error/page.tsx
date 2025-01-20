@@ -5,12 +5,12 @@ export default function Page() {
   return (
     <main className="grid min-h-dvh place-items-center p-4">
       <div className="max-w-md space-y-6 rounded-xl border p-8 shadow">
-        <h1 className="text-3xl font-bold">Tagru</h1>
+        <h1 className="text-3xl font-bold text-destructive">Error</h1>
         <p className="text-muted-foreground">
-          Tagruは動画などweb上のお気に入りのコンテンツをタグ付けして管理するサービスです。
+          エラーが発生しました。もう一度お試しください。
         </p>
         <Button asChild variant="link" className="px-0">
-          <Link href="/login">ログインページへ</Link>
+          <Link href="/">トップに戻る</Link>
         </Button>
       </div>
     </main>
