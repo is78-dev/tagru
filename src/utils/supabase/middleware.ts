@@ -39,13 +39,17 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  console.log("[updateSession] ", user ? "login user" : "not login user");
+
+  const path = request.nextUrl.pathname;
+
   if (!user) {
     // 認証前の場合
     if (
-      request.nextUrl.pathname === "/" ||
-      request.nextUrl.pathname === "/login" ||
-      request.nextUrl.pathname === "/error" ||
-      request.nextUrl.pathname.startsWith("/api/auth")
+      path === "/" ||
+      path === "/login" ||
+      path === "/error" ||
+      path.startsWith("/api/auth")
     ) {
       // 認証を必要としないパスはそのまま通す
       return supabaseResponse;
@@ -57,10 +61,7 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
-  if (
-    request.nextUrl.pathname === "/" ||
-    request.nextUrl.pathname === "/login"
-  ) {
+  if (path === "/" || path === "/login") {
     // 認証後の"/"または"/login"へのリクエストは"/home"にリダイレクト
     const url = request.nextUrl.clone();
     url.pathname = "/home";
