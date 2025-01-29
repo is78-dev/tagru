@@ -1,3 +1,4 @@
+import { registerProfile } from "@/services/profiles";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -18,29 +19,11 @@ export async function GET(request: Request) {
     redirect("/error");
   }
 
-  // const authUserId = user.id;
-
-  // const { data: userData } = await supabase
-  //   .from("users")
-  //   .select("auth_id")
-  //   .eq("auth_id", authData.user.id)
-  //   .single();
-
-  // // ユーザーが存在しない場合のみinsert
-  // if (userData) {
-  //   console.log("already exist userData");
-  //   redirect("/error");
-  // }
-
-  // const googleUsername = authData.user.user_metadata.name;
-  // const { error: userInsertError } = await supabase
-  //   .from("users")
-  //   .insert({ username: googleUsername, auth_user_id: authUserId });
-
-  // if (userInsertError) {
-  //   console.log("userInsertError");
-  //   redirect("/error");
-  // }
+  try {
+    await registerProfile();
+  } catch {
+    redirect("/error");
+  }
 
   redirect("/home");
 }

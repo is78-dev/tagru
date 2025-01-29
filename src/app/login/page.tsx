@@ -1,4 +1,4 @@
-import GoogleLoginButton from "./googleLoginButton";
+import { GoogleLoginButton } from "@/app/login/google-login-button";
 
 export default function Page() {
   return (

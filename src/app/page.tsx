@@ -1,6 +1,3 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-
 export default function Page() {
   return (
     <main className="grid min-h-dvh place-items-center bg-muted p-4">
@@ -9,9 +6,6 @@ export default function Page() {
         <p className="text-muted-foreground">
           Tagruは動画などweb上のお気に入りのコンテンツをタグ付けして管理するサービスです。
         </p>
-        <Button asChild variant="link" className="px-0">
-          <Link href="/login">ログインページへ</Link>
-        </Button>
       </div>
     </main>
   );

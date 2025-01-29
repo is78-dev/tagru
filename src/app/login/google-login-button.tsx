@@ -1,21 +1,17 @@
 "use client";
+import { loginWithGoogle } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
-import React from "react";
 import { FcGoogle } from "react-icons/fc";
 
-const GoogleLoginButton = () => {
+export function GoogleLoginButton() {
   return (
     <Button
       variant="outline"
-      className="w-full gap-[10px] rounded-full px-4 font-bold [&_svg]:size-fit"
-      onClick={() => {
-        window.location.href = "/api/auth/login";
-      }}
+      className="w-full gap-[10px] rounded-full px-4 font-bold"
+      onClick={loginWithGoogle}
     >
       <FcGoogle size={20} />
       <span className="mt-[1px]">Googleでログイン</span>
     </Button>
   );
-};
-
-export default GoogleLoginButton;
+}
