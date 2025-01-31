@@ -1,5 +1,5 @@
 "use client";
-import { logout } from "@/actions/auth";
+import { logout } from "@/actions/authAction";
 import {
   DropdownMenuLabel,
   DropdownMenuSeparator,

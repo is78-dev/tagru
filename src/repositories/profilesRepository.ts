@@ -17,7 +17,7 @@ export const createProfile = cache(
       .single();
 
     if (error) {
-      console.log("createProfile: ", error.message);
+      console.log("[error] crateProfile: ", error.message);
       return null;
     }
 
@@ -35,7 +35,7 @@ export const getProfileByUserId = cache(async (user_id: string) => {
     .single();
 
   if (error) {
-    console.log("getProfileByUserId: ", error);
+    console.log("[error] getProfileByUserId: ", error.message);
     return null;
   }
 

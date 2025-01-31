@@ -1,4 +1,4 @@
-import { registerProfile } from "@/services/profiles";
+import { registerProfile } from "@/services/profilesService";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -22,6 +22,7 @@ export async function GET(request: Request) {
   try {
     await registerProfile();
   } catch {
+    await supabase.auth.signOut();
     redirect("/error");
   }
 

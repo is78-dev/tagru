@@ -2,7 +2,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export const loginWithGoogle = async () => {
+export const login = async () => {
   const supabase = await createClient();
 
   const {

@@ -5,7 +5,7 @@ import {
 import DropdownContent from "@/components/layout/header/dropdown-content";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserRound } from "lucide-react";
-import { currentProfile } from "@/services/profiles";
+import { currentProfile } from "@/services/profilesService";
 
 export default async function UserIcon() {
   const profileData = await currentProfile();

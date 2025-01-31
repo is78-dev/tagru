@@ -2,15 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Tags } from "lucide-react";
 import Link from "next/link";
 import UserIcon from "@/components/layout/header/user-icon";
-import { currentUser } from "@/services/users";
+import { isAuthenticated } from "@/services/usersService";
 
 export default async function Header() {
-  let authenticated = true;
-  try {
-    await currentUser();
-  } catch {
-    authenticated = false;
-  }
+  const isAuth = await isAuthenticated();
 
   return (
     <header className="flex h-14 items-center border-b px-4">
@@ -21,10 +16,10 @@ export default async function Header() {
         </Link>
       </Button>
       <div className="flex-1"></div>
-      {authenticated ? (
+      {isAuth ? (
         <UserIcon />
       ) : (
-        <Button asChild size="sm">
+        <Button asChild size="sm" variant="secondary">
           <Link href="/login">ログイン</Link>
         </Button>
       )}
