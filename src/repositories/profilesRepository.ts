@@ -2,22 +2,22 @@ import "server-only";
 import { createClient } from "@/utils/supabase/server";
 import { cache } from "react";
 
-export const createProfile = cache(
-  async (user_id: string, username: string, avatar_url: string) => {
+export const insertProfile = cache(
+  async (userId: string, userName: string, avatarUrl: string) => {
     const supabase = await createClient();
 
     const { data, error } = await supabase
       .from("profiles")
       .insert({
-        user_id: user_id,
-        username: username,
-        avatar_url: avatar_url,
+        user_id: userId,
+        user_name: userName,
+        avatar_url: avatarUrl,
       })
       .select()
       .single();
 
     if (error) {
-      console.log("[error] crateProfile: ", error.message);
+      console.log("[error] insertProfile: ", error.message);
       return null;
     }
 
@@ -25,17 +25,17 @@ export const createProfile = cache(
   },
 );
 
-export const getProfileByUserId = cache(async (user_id: string) => {
+export const selectProfileByUserId = cache(async (userId: string) => {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("profiles")
     .select("*")
-    .eq("user_id", user_id)
+    .eq("user_id", userId)
     .single();
 
   if (error) {
-    console.log("[error] getProfileByUserId: ", error.message);
+    console.log("[error] selectProfileByUserId: ", error.message);
     return null;
   }
 

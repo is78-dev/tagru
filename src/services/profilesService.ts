@@ -1,19 +1,19 @@
 import {
-  createProfile,
-  getProfileByUserId,
+  insertProfile,
+  selectProfileByUserId,
 } from "@/repositories/profilesRepository";
-import { currentUser } from "@/services/usersService";
+import { getUser } from "@/services/usersService";
 
 export const registerProfile = async () => {
-  const userData = await currentUser();
+  const userData = await getUser();
 
-  const profileData = await getProfileByUserId(userData.id);
+  const profileData = await selectProfileByUserId(userData.id);
 
   if (profileData) {
     return profileData;
   }
 
-  const createdProfileData = await createProfile(
+  const createdProfileData = await insertProfile(
     userData.id,
     userData.user_metadata.name,
     userData.user_metadata.avatar_url,
@@ -26,10 +26,10 @@ export const registerProfile = async () => {
   return createdProfileData;
 };
 
-export const currentProfile = async () => {
-  const userData = await currentUser();
+export const getProfile = async () => {
+  const userData = await getUser();
 
-  const profileData = await getProfileByUserId(userData.id);
+  const profileData = await selectProfileByUserId(userData.id);
 
   if (!profileData) {
     throw new Error("プロフィールの取得に失敗しました");

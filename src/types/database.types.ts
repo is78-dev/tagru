@@ -9,27 +9,126 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      content_tags: {
+        Row: {
+          content_id: string
+          created_at: string
+          id: number
+          tag_id: string
+          user_id: string
+        }
+        Insert: {
+          content_id: string
+          created_at?: string
+          id?: number
+          tag_id: string
+          user_id: string
+        }
+        Update: {
+          content_id?: string
+          created_at?: string
+          id?: number
+          tag_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_tags_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "contents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contents: {
+        Row: {
+          content_url: string
+          created_at: string
+          id: string
+          note: string
+          src_url: string
+          thumbnail_url: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          content_url: string
+          created_at?: string
+          id?: string
+          note: string
+          src_url: string
+          thumbnail_url: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          content_url?: string
+          created_at?: string
+          id?: string
+          note?: string
+          src_url?: string
+          thumbnail_url?: string
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
           created_at: string
-          id: number
+          id: string
           user_id: string
-          username: string
+          user_name: string
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
-          id?: number
+          id?: string
           user_id: string
-          username: string
+          user_name: string
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
-          id?: number
+          id?: string
           user_id?: string
-          username?: string
+          user_name?: string
+        }
+        Relationships: []
+      }
+      tags: {
+        Row: {
+          created_at: string
+          id: string
+          is_favorite: boolean
+          tag_name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_favorite?: boolean
+          tag_name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_favorite?: boolean
+          tag_name?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -38,7 +137,32 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_contents_by_tag_id: {
+        Args: {
+          target_tag_id: string
+        }
+        Returns: {
+          content_id: string
+          title: string
+          thumbnail_url: string
+          tag_id: string
+          tag_name: string
+          is_favorite: boolean
+        }[]
+      }
+      insert_content_with_tags: {
+        Args: {
+          p_user_id: string
+          p_title: string
+          p_type: string
+          p_src_url: string
+          p_thumbnail_url: string
+          p_content_url: string
+          p_note: string
+          p_tags: string[]
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

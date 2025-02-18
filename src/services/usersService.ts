@@ -1,17 +1,17 @@
-import { getUser } from "@/repositories/usersRepository";
+import { selectUser } from "@/repositories/usersRepository";
 
-export const currentUser = async () => {
-  const userData = await getUser();
+export const getUser = async () => {
+  const userData = await selectUser();
 
   if (!userData) {
-    throw new Error("ユーザーの取得に失敗しました");
+    throw new Error("ユーザーデータの取得に失敗しました");
   }
 
   return userData;
 };
 
 export const isAuthenticated = async () => {
-  const userData = await getUser();
+  const userData = await selectUser();
 
   return !!userData;
 };
