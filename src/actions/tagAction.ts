@@ -1,6 +1,10 @@
 "use server";
 
-import { createTag, getAllTags } from "@/services/tagsService";
+import {
+  createTag,
+  getAllTags,
+  getTagsByContentId,
+} from "@/services/tagsService";
 import { createTagFormSchema } from "@/types/zod-schema";
 import { z } from "zod";
 
@@ -21,4 +25,11 @@ export const createTagAction = async (
 export const getAllTagAction = async () => {
   const data = await getAllTags();
   return data;
+};
+
+// タグリストを取得(key: contentId)
+export const getTagsByContentIdAction = async (contentId: string) => {
+  const tags = await getTagsByContentId(contentId);
+
+  return tags;
 };

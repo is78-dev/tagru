@@ -17,12 +17,14 @@ type Props = {
   tags: Tag[];
   handleSelectTag: (tag: Tag) => void;
   handleCreateTag: (tagName: string, isFavorite: boolean) => void;
+  placeholder?: string;
 };
 
 export default function SearchTagCommand({
   tags,
   handleSelectTag,
   handleCreateTag,
+  placeholder = "",
 }: Props) {
   const [inputText, setInputText] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
@@ -50,7 +52,7 @@ export default function SearchTagCommand({
     >
       <CommandInput
         className="rounded-lg border"
-        placeholder="検索または作成するタグを入力"
+        placeholder={placeholder}
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
         value={inputText}
@@ -59,8 +61,8 @@ export default function SearchTagCommand({
       <div className="relative h-0">
         <CommandList
           className={twMerge(
-            "absolute left-0 top-2 z-10 rounded border bg-background shadow transition duration-200",
-            !open && "pointer-events-none translate-y-4 opacity-0",
+            "visible absolute left-0 top-2 z-10 max-h-[200px] translate-y-0 rounded-md border bg-card opacity-100 shadow transition-all duration-200",
+            !open && "invisible translate-y-4 opacity-0",
           )}
         >
           {filteredTagsLength === 0 && (

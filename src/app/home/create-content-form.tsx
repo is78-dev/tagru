@@ -22,10 +22,10 @@ import { extractYoutubeVideoId } from "@/utils/common/extractYoutubeVideoId";
 import { Tag } from "@/types/format";
 import { createTagAction, getAllTagAction } from "@/actions/tagAction";
 import SearchTagCommand from "./search-tag-command";
-import SelectedTagCarousel from "./selected-tag-carousel";
+import SelectedTagCarousel from "./selected-tag-list";
 import { createYoutubeContentAction } from "@/actions/contentAction";
 
-export default function CreateContentForm() {
+export default function CreateContentForm1() {
   const { toast } = useToast();
   const [step, setStep] = useState<"find" | "edit">("find");
   const [loading, setLoading] = useState<boolean>(false);
@@ -59,7 +59,7 @@ export default function CreateContentForm() {
             toast({
               variant: "destructive",
               title: "エラー",
-              description: "予期しないエラーが発生しました",
+              description: "予期せぬエラーが発生しました",
             });
           }
         }
@@ -67,7 +67,7 @@ export default function CreateContentForm() {
     }
   }, [step]);
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const handleFormSubmit = async (values: z.infer<typeof formSchema>) => {
     values.tags = selectedTags;
 
     try {
@@ -77,7 +77,7 @@ export default function CreateContentForm() {
       setSelectedTags([]);
       form.reset();
       toast({
-        title: "コンテンツの追加に成功しました",
+        title: "コンテンツを追加しました",
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -90,7 +90,7 @@ export default function CreateContentForm() {
         toast({
           variant: "destructive",
           title: "エラー",
-          description: "予期しないエラーが発生しました",
+          description: "予期せぬエラーが発生しました",
         });
       }
     } finally {
@@ -167,7 +167,7 @@ export default function CreateContentForm() {
         toast({
           variant: "destructive",
           title: "エラー",
-          description: "予期しないエラーが発生しました",
+          description: "予期せぬエラーが発生しました",
         });
       }
     } finally {
@@ -179,7 +179,10 @@ export default function CreateContentForm() {
   return (
     <Card className="max-w-2xl p-8">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form
+          onSubmit={form.handleSubmit(handleFormSubmit)}
+          className="space-y-6"
+        >
           {/* URL */}
           <FormField
             control={form.control}
@@ -233,6 +236,7 @@ export default function CreateContentForm() {
                   tags={tags.filter((tag) => !selectedTags.includes(tag))}
                   handleSelectTag={appendTag}
                   handleCreateTag={createTag}
+                  placeholder="追加するタグを検索"
                 />
               </FormItem>
             </>

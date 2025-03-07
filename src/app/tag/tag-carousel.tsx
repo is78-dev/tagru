@@ -1,10 +1,6 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tag } from "@/types/format";
 import Link from "next/link";
 
@@ -17,21 +13,28 @@ export default function TagCarousel({ tags }: Props) {
     .filter((tag) => tag.isFavorite)
     .concat(tags.filter((tag) => !tag.isFavorite));
 
-  return tags.length > 0 ? (
-    <Carousel className="w-full">
-      <CarouselContent className="-ml-1 select-none text-nowrap *:basis-auto *:pl-1">
-        {sortedTagList.map((tag, index) => (
-          <CarouselItem key={index}>
-            <Link href={`/tag?t=${tag.tagId}`} prefetch={false}>
-              <Badge variant={tag.isFavorite ? "default" : "outline"}>
-                {tag.tagName}
-              </Badge>
-            </Link>
-          </CarouselItem>
+  return (
+    <ScrollArea className="w-full">
+      <div className="mb-3 flex gap-1.5">
+        {sortedTagList.map((tag) => (
+          <Link
+            key={tag.tagId}
+            href={`/tag?t=${tag.tagId}`}
+            prefetch={false}
+            className="z-20 mt-1 block"
+          >
+            <Badge variant={tag.isFavorite ? "default" : "secondary"}>
+              {tag.tagName}
+            </Badge>
+          </Link>
         ))}
-      </CarouselContent>
-    </Carousel>
-  ) : (
-    <div className="h-6"></div>
+        {sortedTagList.length === 0 && (
+          <div className="mt-1">
+            <Badge variant="outline">タグ無し</Badge>
+          </div>
+        )}
+      </div>
+      <ScrollBar orientation="horizontal" className="z-20" />
+    </ScrollArea>
   );
 }

@@ -1,32 +1,48 @@
-import { ContentWithTags } from "@/types/format";
+import { ContentWithTags, Tag } from "@/types/format";
 import Link from "next/link";
 import TagCarousel from "./tag-carousel";
+import { twMerge } from "tailwind-merge";
+import { Card } from "@/components/ui/card";
 
 type Props = {
-  content: ContentWithTags;
+  contentWithTags: ContentWithTags;
+  currentTagId: string;
+  active?: boolean;
 };
 
-export default function ContentCard({ content }: Props) {
+export default function ContentCard({
+  contentWithTags,
+  currentTagId,
+  active,
+}: Props) {
   return (
-    <div>
-      <Link
-        href={`/content?c=${content.contentId}`}
-        prefetch={false}
-        className="block rounded-lg border border-transparent p-2 hover:opacity-80 active:border-border active:bg-muted"
-      >
-        <div className="aspect-video w-full overflow-hidden rounded border">
-          <img
-            src={content.thumbnailUrl}
-            className="pointer-events-none size-full object-cover"
-          />
-        </div>
-        <div className="mt-2 overflow-hidden overflow-ellipsis text-nowrap text-sm font-medium">
-          {content.title}
-        </div>
-      </Link>
-      <div className="mx-2">
-        <TagCarousel tags={content.tags} />
+    <Card
+      className={twMerge(
+        "group/content-card relative overflow-hidden rounded-md transition-all duration-200",
+        active ? "pointer-events-none brightness-50" : "hover:shadow-md",
+      )}
+    >
+      {/* サムネイル */}
+      <div className="aspect-video w-full">
+        <img
+          src={contentWithTags.thumbnailUrl}
+          className="pointer-events-none size-full object-cover transition-all duration-200 group-hover/content-card:opacity-80"
+        />
       </div>
-    </div>
+      <div className="px-3 pt-3">
+        {/* タイトル */}
+        <Link
+          href={`/content?c=${contentWithTags.contentId}&t=${currentTagId}`}
+          prefetch={false}
+          className="block overflow-hidden overflow-ellipsis whitespace-nowrap text-sm font-medium"
+        >
+          {contentWithTags.title}
+          <span className="absolute inset-0 z-10"></span>
+        </Link>
+        {contentWithTags.tags.length > 0 && (
+          <TagCarousel tags={contentWithTags.tags} />
+        )}
+      </div>
+    </Card>
   );
 }

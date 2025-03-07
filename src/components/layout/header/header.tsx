@@ -8,23 +8,25 @@ export default async function Header() {
   const isAuth = await isAuthenticated();
 
   return (
-    <div className="flex items-center border-b">
-      <header className="container mx-auto flex items-center px-4 py-2">
-        <Button asChild size="sm" variant="ghost" className="text-lg font-bold">
-          <Link href="/" prefetch={false}>
-            <Tags size={24} />
-            <span>Tagru</span>
-          </Link>
-        </Button>
-        <div className="flex-1"></div>
+    <header className="flex w-full items-center border-b bg-card px-4 py-2">
+      <Button asChild size="sm" variant="ghost" className="text-lg font-bold">
+        <Link href="/" prefetch={false}>
+          <Tags size={24} />
+          <span>Tagru</span>
+        </Link>
+      </Button>
+      <div className="flex-1"></div>
+      <div className="px-2">
         {isAuth ? (
           <UserIcon />
         ) : (
-          <Button asChild size="sm" variant="secondary">
-            <Link href="/login">ログイン</Link>
+          <Button asChild size="sm" variant="default">
+            <Link href="/login" prefetch={false}>
+              ログイン
+            </Link>
           </Button>
         )}
-      </header>
-    </div>
+      </div>
+    </header>
   );
 }

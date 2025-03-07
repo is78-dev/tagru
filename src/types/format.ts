@@ -10,3 +10,13 @@ export type ContentWithTags = {
   thumbnailUrl: string;
   tags: Tag[];
 };
+
+export type Content = {
+  contentId: string;
+  type: string;
+  title: string;
+  note: string;
+  srcUrl: string;
+  thumbnailUrl: string;
+  contentUrl: string;
+};

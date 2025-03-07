@@ -13,7 +13,7 @@ export default async function UserIcon() {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Avatar className="size-8">
+        <Avatar className="size-9">
           <AvatarImage src={profileData.avatar_url ?? ""} alt="avatar" />
           <AvatarFallback className="border bg-background shadow">
             <UserRound />

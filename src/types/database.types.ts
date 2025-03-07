@@ -163,6 +163,20 @@ export type Database = {
         }
         Returns: string
       }
+      update_content_and_tags: {
+        Args: {
+          p_content_id: string
+          p_user_id: string
+          p_title: string
+          p_type: string
+          p_src_url: string
+          p_thumbnail_url: string
+          p_content_url: string
+          p_note: string
+          p_tags: string[]
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

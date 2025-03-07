@@ -3,6 +3,7 @@ import {
   selectAllTags,
   selectTagByTagId,
   selectTagByTagName,
+  selectTagsByContentId,
 } from "@/repositories/tagsRepository";
 import { getUser } from "./usersService";
 import { Tag } from "@/types/format";
@@ -30,6 +31,22 @@ export const getAllTags = async (): Promise<Tag[]> => {
 
   return tagsData.map(({ id, tag_name, is_favorite }) => {
     return { tagId: id, tagName: tag_name, isFavorite: is_favorite };
+  });
+};
+
+export const getTagsByContentId = async (contentId: string): Promise<Tag[]> => {
+  const tagsData = await selectTagsByContentId(contentId);
+
+  if (!tagsData) {
+    throw new Error("タグの取得に失敗しました");
+  }
+
+  return tagsData.map(({ tags }) => {
+    return {
+      tagId: tags.id,
+      tagName: tags.tag_name,
+      isFavorite: tags.is_favorite,
+    };
   });
 };
 

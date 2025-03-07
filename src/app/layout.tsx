@@ -3,7 +3,6 @@ import "@/styles/globals.css";
 import { inter, notoSansJP } from "@/styles/font";
 import Header from "@/components/layout/header/header";
 import { Toaster } from "@/components/ui/toaster";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const metadata: Metadata = {
   title: "Tagru",
@@ -18,12 +17,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${inter.variable} ${notoSansJP.variable} antialiased`}>
-        <ScrollArea type="auto" className="h-dvh">
-          <Header />
-          <main className="container mx-auto p-4">{children}</main>
-          <Toaster />
-        </ScrollArea>
+      <body
+        className={`${inter.variable} ${notoSansJP.variable} flex min-h-dvh flex-col antialiased`}
+      >
+        <Header />
+        <main className="relative grow p-4">{children}</main>
+        <Toaster />
       </body>
     </html>
   );

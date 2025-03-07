@@ -48,6 +48,22 @@ export const selectTagByTagName = cache(async (tagName: string) => {
   return data;
 });
 
+export const selectTagsByContentId = cache(async (contentId: string) => {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("content_tags")
+    .select("tags(*)")
+    .eq("content_id", contentId);
+
+  if (error) {
+    console.log("[error] selectTagsByContentId: ", error.message);
+    return null;
+  }
+
+  return data;
+});
+
 export const insertTag = cache(
   async (userId: string, tagName: string, isFavorite: boolean) => {
     const supabase = await createClient();
