@@ -17,7 +17,7 @@ import { createContentFormSchema as formSchema } from "@/types/zod-schema";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { getYoutubeVideoTitle } from "@/actions/youtubeActions";
+import { getYoutubeVideoTitleAction } from "@/actions/youtubeActions";
 import { extractYoutubeVideoId } from "@/utils/common/extractYoutubeVideoId";
 import { Tag } from "@/types/format";
 import { createTagAction, getAllTagAction } from "@/actions/tagAction";
@@ -116,7 +116,7 @@ export default function CreateContentForm1() {
 
     setLoading(true);
 
-    const title = await getYoutubeVideoTitle(videoId);
+    const title = await getYoutubeVideoTitleAction(videoId);
     if (title) {
       form.clearErrors("srcUrl");
       form.setValue("title", title);

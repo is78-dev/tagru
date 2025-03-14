@@ -1,7 +1,6 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -27,15 +26,13 @@ export default function CreateContentButton({ initTags }: Props) {
         </Button>
       </DialogTrigger>
       <DialogContent
-        className="max-w-xl bg-card"
+        className="block max-w-xl bg-card"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <DialogHeader>
           <DialogTitle>コンテンツの追加</DialogTitle>
         </DialogHeader>
-        <div className="max-h-[80dvh]">
-          <CreateContentForm initTags={initTags} className="" />
-        </div>
+        <CreateContentForm initTags={initTags} />
       </DialogContent>
     </Dialog>
   );

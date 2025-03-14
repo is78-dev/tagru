@@ -1,6 +1,6 @@
 "use server";
 
-export const getYoutubeVideoTitle = async (videoId: string) => {
+export const getYoutubeVideoTitleAction = async (videoId: string) => {
   try {
     const youtubeApiKey = process.env.YOUTUBE_API_KEY;
 

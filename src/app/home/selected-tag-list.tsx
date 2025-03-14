@@ -18,13 +18,13 @@ export default function SelectedTagList({
 }: Props) {
   if (isCreatingTag) {
     return (
-      <div className="h-[38px] text-sm text-muted-foreground">タグを作成中</div>
+      <div className="h-8 text-sm text-muted-foreground">タグを作成中</div>
     );
   }
 
   if (tags.length === 0) {
     return (
-      <div className="h-[38px] text-sm text-muted-foreground">
+      <div className="h-8 text-sm text-muted-foreground">
         タグが指定されていません
       </div>
     );
@@ -35,8 +35,8 @@ export default function SelectedTagList({
     .concat(tags.filter((tag) => !tag.isFavorite));
 
   return (
-    <ScrollArea className="mb-1 w-full">
-      <div className="mb-3 flex gap-1.5">
+    <ScrollArea className="h-8 w-full" type="auto">
+      <div className="flex min-w-0 gap-1.5">
         {sortedTagList.map((tag) => (
           <Badge
             key={tag.tagId}
