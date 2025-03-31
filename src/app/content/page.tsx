@@ -1,15 +1,15 @@
-import {
-  getContentByContentId,
-  getContentsByTagId,
-} from "@/services/contentsService";
-import { getTagByTagId, getTagsByContentId } from "@/services/tagsService";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+  getContentListService,
+  getContentService,
+} from "@/services/contentsService";
+import { getTagListService, getTagService } from "@/services/tagsService";
+import InfinityContentList from "@/components/element/infinity-content-list/infinity-content-list";
+import ContentCreateDialog from "@/components/element/content-create-dialog/content-create-dialog";
+import ContentInfo from "./content-info/content-info";
 import { Tag } from "lucide-react";
-import ContentList from "./content-list";
-import ContentInfo from "./content-info";
-import CreateContentButton from "@/components/element/create-content-button/create-content-button";
 
 type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -18,31 +18,35 @@ type PageProps = {
 export default async function Page({ searchParams }: PageProps) {
   const { c: contentId, t: tagId } = await searchParams;
   if (typeof contentId !== "string") notFound();
-  if (typeof tagId !== "string") notFound();
+  if (!(typeof tagId === "string" || typeof tagId === "undefined")) notFound();
 
-  const currentContent = await getContentByContentId(contentId);
-  const currentContentTagList = await getTagsByContentId(contentId);
-  const currentTag = await getTagByTagId(tagId);
-  const currentTagContentList = await getContentsByTagId(tagId);
+  const content = await getContentService(contentId);
+  const tags = await getTagListService({ contentId });
+  const currentTag = tagId ? await getTagService(tagId) : undefined;
+  const initialContents = await getContentListService({
+    range: { offset: 0, limit: 30 },
+    tagId,
+  });
 
   return (
-    <div className="flex flex-col gap-8 xl:px-10">
+    <div className="flex flex-col gap-6 py-6">
       {/* コンテンツ */}
-      <div className="flex flex-col gap-4 xl:flex-row">
+      <div className="flex flex-col gap-6 xl:flex-row">
         {/* コンテンツ本体 */}
         <div className="aspect-video w-full overflow-hidden rounded-md outline outline-1 outline-border">
           <iframe
-            src={currentContent.contentUrl + "?rel=0"}
+            key={content.contentId}
+            src={content.contentUrl + "?rel=0"}
             className="size-full"
             allowFullScreen
           ></iframe>
         </div>
-        {/* コンテンツ詳細 */}
-        <div className="relative h-[360px] grow xl:h-auto xl:min-w-[500px]">
+        {/* コンテンツ情報 */}
+        <div className="relative h-[50dvh] grow p-2 xl:h-auto xl:min-w-[25%]">
           <ContentInfo
-            key={currentContent.contentId}
-            currentContent={currentContent}
-            currentContentTagList={currentContentTagList}
+            key={content.contentId}
+            content={content}
+            tags={tags}
             currentTag={currentTag}
             className="absolute inset-0"
           />
@@ -50,21 +54,28 @@ export default async function Page({ searchParams }: PageProps) {
       </div>
       {/* 関連コンテンツ */}
       <div className="flex flex-col gap-4">
-        {/* タグ */}
-        <div className="flex flex-wrap gap-2">
-          <CreateContentButton initTags={[currentTag]} />
-          <Button asChild variant="ghost" className="text-xl font-semibold">
-            <Link href={`/tag?t=${currentTag.tagId}`}>
-              <Tag size={16} strokeWidth={2.5} />
-              {currentTag.tagName}
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <Button
+            asChild
+            variant="ghost"
+            className="-ml-4 text-xl font-semibold"
+          >
+            <Link href={currentTag ? `/tag?t=${currentTag.tagId}` : "/"}>
+              <Tag className="size-5 stroke-[2.5]" />
+              {currentTag ? currentTag.tagName : "全てのコンテンツ"}
             </Link>
           </Button>
+          <ContentCreateDialog initialTags={currentTag ? [currentTag] : []}>
+            <Button size="sm" variant="default">
+              コンテンツを追加
+            </Button>
+          </ContentCreateDialog>
         </div>
-        {/* コンテンツリスト */}
-        <ContentList
-          contentList={currentTagContentList}
-          currentTag={currentTag}
-          currentContent={currentContent}
+        <InfinityContentList
+          initialContents={initialContents}
+          chunkSize={30}
+          currentContentId={content.contentId}
+          currentTagId={currentTag?.tagId}
         />
       </div>
     </div>

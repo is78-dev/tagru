@@ -3,6 +3,8 @@ import "@/styles/globals.css";
 import { inter, notoSansJP } from "@/styles/font";
 import Header from "@/components/layout/header/header";
 import { Toaster } from "@/components/ui/toaster";
+import { AllTagsContext } from "@/context/all-tags-context";
+import { CurrentContentContext } from "@/context/current-content-context";
 
 export const metadata: Metadata = {
   title: "Tagru",
@@ -18,11 +20,19 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${inter.variable} ${notoSansJP.variable} flex min-h-dvh flex-col antialiased`}
+        className={`${inter.variable} ${notoSansJP.variable} overflow-hidden antialiased`}
       >
-        <Header />
-        <main className="relative grow p-4">{children}</main>
-        <Toaster />
+        <AllTagsContext>
+          <CurrentContentContext>
+            <div className="flex h-dvh flex-col">
+              <Header />
+              <main className="grow overflow-auto px-4 md:px-10 2xl:px-20">
+                {children}
+              </main>
+              <Toaster />
+            </div>
+          </CurrentContentContext>
+        </AllTagsContext>
       </body>
     </html>
   );

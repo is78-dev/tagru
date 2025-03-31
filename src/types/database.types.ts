@@ -113,6 +113,7 @@ export type Database = {
           created_at: string
           id: string
           is_favorite: boolean
+          note: string
           tag_name: string
           user_id: string
         }
@@ -120,6 +121,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_favorite?: boolean
+          note?: string
           tag_name: string
           user_id: string
         }
@@ -127,6 +129,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_favorite?: boolean
+          note?: string
           tag_name?: string
           user_id?: string
         }

@@ -26,6 +26,7 @@ export const updateContentFormSchema = z.object({
   note: z.string(),
 });
 
+// スキーマから型を生成
 export type CreateTagFormType = z.infer<typeof createTagFormSchema>;
 export type CreateContentFormType = z.infer<typeof createContentFormSchema>;
 export type UpdateContentFormType = z.infer<typeof updateContentFormSchema>;

@@ -1,11 +1,8 @@
 "use client";
 
-import { getAllTagAction } from "@/actions/tagAction";
+import { createTagAction } from "@/actions/tagAction";
 import { getYoutubeVideoTitleAction } from "@/actions/youtubeActions";
-import SearchTagCommand from "@/app/home/search-tag-command";
-import SelectedTagList from "@/app/home/selected-tag-list";
 import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -24,22 +21,29 @@ import {
 } from "@/types/zod-schema";
 import { extractYoutubeVideoId } from "@/utils/common/extractYoutubeVideoId";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { createYoutubeContentAction } from "@/actions/contentAction";
+import { useAllTags } from "@/context/all-tags-context";
+import TagCarousel from "../tag-carousel/tag-carousel";
+import TagSearchCreateBox from "../tag-search-create-box/tag-search-create-box";
 
 type Props = {
-  initTags: Tag[];
+  initialTags: Tag[];
+  onFormClose: () => void;
 };
 
-export default function CreateContentForm({ initTags }: Props) {
+export default function ContentCreateForm({ initialTags, onFormClose }: Props) {
   const [mode, setMode] = useState<"found" | "edit">("found");
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedTagIds, setSelectedTagIds] = useState<string[]>(
-    initTags.map((tag) => tag.tagId),
+  const [isCreatingTag, setIsCreatingTag] = useState<boolean>(false);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>(initialTags);
+  const selectedTagIds = useMemo(
+    () => selectedTags.map((tag) => tag.tagId),
+    [selectedTags],
   );
-  const [allTags, setAllTags] = useState<Tag[]>([]);
+  const { allTags, refreshAllTags } = useAllTags();
   const { toast } = useToast();
-
   const form = useForm<CreateContentFormType>({
     resolver: zodResolver(updateContentFormSchema),
     defaultValues: {
@@ -50,33 +54,8 @@ export default function CreateContentForm({ initTags }: Props) {
     },
   });
 
-  // 初回レンダリング後に全てのタグを取得
-  useEffect(() => {
-    (async () => {
-      try {
-        const allTagData = await getAllTagAction();
-        setAllTags(allTagData);
-      } catch (error) {
-        if (error instanceof Error) {
-          toast({
-            variant: "destructive",
-            title: "エラー",
-            description: error.message,
-          });
-        } else {
-          toast({
-            variant: "destructive",
-            title: "エラー",
-            description: "予期せぬエラーが発生しました",
-          });
-        }
-      }
-    })();
-  }, []);
-
-  // 次へボタンをクリックしたときに実行される関数
+  // 次へボタンをクリック
   const handleClickNextButton = async () => {
-    console.log("aaaa");
     const url = form.getValues("srcUrl");
     if (!url) {
       // urlが空文字列の場合
@@ -95,7 +74,6 @@ export default function CreateContentForm({ initTags }: Props) {
     }
 
     setLoading(true);
-
     const title = await getYoutubeVideoTitleAction(videoId);
     if (!title) {
       // タイトルの取得に失敗した場合
@@ -113,24 +91,69 @@ export default function CreateContentForm({ initTags }: Props) {
     setLoading(false);
   };
 
-  // 戻るボタンをクリックしたときに実行される関数
-  const handleClickPrevButton = () => {
+  // 戻るボタンをクリック
+  const handleClickBackButton = () => {
     const srcUrl = form.getValues("srcUrl");
     form.reset();
     form.setValue("srcUrl", srcUrl);
-    setSelectedTagIds(initTags.map((tag) => tag.tagId));
+    setSelectedTags(initialTags);
     setMode("found");
   };
 
-  // フォームが送信されたときに実行される関数
-  const handleSubmitForm = async (data: CreateContentFormType) => {
-    // 送信データに選択中のタグを代入
-    data.tags = allTags.filter((tag) => selectedTagIds.includes(tag.tagId));
-    console.log(data);
+  // タグ作成
+  const handleCreateTag = async (tagName: string, isFavorite: boolean) => {
+    try {
+      setIsCreatingTag(true);
+      setLoading(true);
+      const createdTag = await createTagAction({ tagName, isFavorite });
+      setSelectedTags((prev) => [createdTag, ...prev]);
+      refreshAllTags();
+      toast({ title: "タグを作成して追加しました" });
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          variant: "destructive",
+          title: "エラー",
+          description: error.message,
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "エラー",
+          description: "予期せぬエラーが発生しました",
+        });
+      }
+    } finally {
+      setIsCreatingTag(false);
+      setLoading(false);
+    }
   };
 
-  // タグの作成時に実行される関数
-  const handleCreateTag = async () => {};
+  // フォーム送信
+  const handleSubmitForm = async (data: CreateContentFormType) => {
+    try {
+      setLoading(true);
+      data.tags = selectedTags;
+      await createYoutubeContentAction(data);
+      window.location.reload();
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          variant: "destructive",
+          title: "エラー",
+          description: error.message,
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "エラー",
+          description: "予期せぬエラーが発生しました",
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -140,7 +163,7 @@ export default function CreateContentForm({ initTags }: Props) {
       >
         {/* フォームコンテンツ */}
         <div className="overflow-y-auto">
-          <div className="m-2 flex flex-col gap-4">
+          <div className="m-2 flex flex-col gap-6">
             {/* コンテンツURL */}
             <FormField
               control={form.control}
@@ -166,7 +189,7 @@ export default function CreateContentForm({ initTags }: Props) {
                 {/* 確認用動画埋め込み */}
                 <iframe
                   src={`https://www.youtube-nocookie.com/embed/${extractYoutubeVideoId(form.getValues("srcUrl"))}?rel=0`}
-                  className="aspect-video w-full rounded-md"
+                  className="aspect-video w-full rounded-md outline outline-1 outline-border"
                   allowFullScreen
                 ></iframe>
                 {/* タイトル */}
@@ -188,36 +211,29 @@ export default function CreateContentForm({ initTags }: Props) {
                   )}
                 />
                 {/* タグ */}
-                <FormField
-                  control={form.control}
-                  name="tags"
-                  render={() => (
-                    <FormItem className="space-y-1">
-                      <FormLabel>タグ</FormLabel>
-                      <SelectedTagList
-                        tags={allTags.filter((tag) =>
-                          selectedTagIds.includes(tag.tagId),
-                        )}
-                        handleSelectTag={(tag) =>
-                          setSelectedTagIds((prev) =>
-                            prev.filter((tid) => tid !== tag.tagId),
-                          )
-                        }
-                        isCreatingTag={loading}
-                      />
-                      <SearchTagCommand
-                        tags={allTags.filter(
-                          (tag) => !selectedTagIds.includes(tag.tagId),
-                        )}
-                        handleSelectTag={(tag) =>
-                          setSelectedTagIds((prev) => [...prev, tag.tagId])
-                        }
-                        handleCreateTag={handleCreateTag}
-                        placeholder="追加または作成するタグを入力"
-                      />
-                    </FormItem>
-                  )}
-                />
+                <FormItem>
+                  <FormLabel>タグ</FormLabel>
+                  <TagCarousel
+                    tags={selectedTags}
+                    onSelect={(tag) =>
+                      setSelectedTags((prev) =>
+                        prev.filter((t) => t.tagId !== tag.tagId),
+                      )
+                    }
+                    loading={isCreatingTag}
+                  />
+                  <TagSearchCreateBox
+                    tags={allTags.filter(
+                      (tag) => !selectedTagIds.includes(tag.tagId),
+                    )}
+                    onSelect={(tag) =>
+                      setSelectedTags((prev) => [tag, ...prev])
+                    }
+                    onCreate={handleCreateTag}
+                    placeholder="追加または作成するタグ名を入力"
+                    className="rounded-lg"
+                  />
+                </FormItem>
                 {/* メモ */}
                 <FormField
                   control={form.control}
@@ -242,11 +258,15 @@ export default function CreateContentForm({ initTags }: Props) {
         </div>
         {/* フォーム操作ボタン */}
         <div className="mx-2 flex justify-between">
-          <DialogClose asChild>
-            <Button variant="outline" type="button" className="bg-card">
-              キャンセル
-            </Button>
-          </DialogClose>
+          <Button
+            variant="outline"
+            type="button"
+            className="bg-card"
+            onClick={onFormClose}
+            disabled={loading}
+          >
+            キャンセル
+          </Button>
           {mode === "found" ? (
             <Button
               type="button"
@@ -260,11 +280,12 @@ export default function CreateContentForm({ initTags }: Props) {
               <Button
                 type="button"
                 variant="secondary"
-                onClick={handleClickPrevButton}
+                onClick={handleClickBackButton}
+                disabled={loading}
               >
                 戻る
               </Button>
-              <Button>作成</Button>
+              <Button disabled={loading}>作成</Button>
             </div>
           )}
         </div>

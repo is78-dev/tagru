@@ -3,7 +3,8 @@
 import {
   createYoutubeContent,
   deleteContent,
-  getContentByContentId,
+  getContentListService,
+  getContentService,
   updateContent,
   updateContentNote,
 } from "@/services/contentsService";
@@ -34,13 +35,6 @@ export const updateContentNoteAction = async (
   return updatedContentData;
 };
 
-// コンテンツを取得
-export const getContentAction = async (contentId: string) => {
-  const contentData = await getContentByContentId(contentId);
-
-  return contentData;
-};
-
 // コンテンツを更新
 export const updateContentAction = async (
   contentId: string,
@@ -59,4 +53,24 @@ export const updateContentAction = async (
 // コンテンツを削除
 export const deleteContentAction = async (contentId: string) => {
   await deleteContent(contentId);
+};
+
+// --------
+
+// 取得
+export const getContentAction = async (contentId: string) => {
+  const data = await getContentService(contentId);
+  return data;
+};
+
+// 一覧取得
+export const getContentsAction = async ({
+  range,
+  tagId,
+}: {
+  range?: { offset: number; limit: number };
+  tagId?: string;
+}) => {
+  const data = await getContentListService({ range, tagId });
+  return data;
 };

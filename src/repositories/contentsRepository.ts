@@ -2,20 +2,8 @@ import "server-only";
 import { createClient } from "@/utils/supabase/server";
 import { cache } from "react";
 
-export const selectAllContents = cache(async () => {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase.from("contents").select("*");
-
-  if (error) {
-    console.log("[error] selectAllContents: ", error.message);
-    return null;
-  }
-
-  return data;
-});
-
-export const selectContentByContentId = cache(async (contentId: string) => {
+// 取得
+export const getContentRepository = cache(async (contentId: string) => {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -25,27 +13,78 @@ export const selectContentByContentId = cache(async (contentId: string) => {
     .single();
 
   if (error) {
-    console.log("[error] selectContentByContentId: ", error.message);
+    console.log("[error] ", error.message);
     return null;
   }
 
   return data;
 });
 
-export const selectContentsByTagId = cache(async (tagId: string) => {
-  const supabase = await createClient();
+// 一覧取得
+export const getContentListRepository = cache(
+  async ({
+    range,
+    tagId,
+  }: {
+    range?: { offset: number; limit: number };
+    tagId?: string;
+  }) => {
+    const supabase = await createClient();
+    let response;
 
-  const { data, error } = await supabase.rpc("get_contents_by_tag_id", {
-    target_tag_id: tagId,
-  });
+    if (!tagId) {
+      // タグ指定がない場合は全件取得
+      if (range) {
+        response = await supabase
+          .from("contents")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .range(range.offset, range.offset + range.limit - 1);
+      } else {
+        response = await supabase
+          .from("contents")
+          .select("*")
+          .order("created_at", { ascending: false });
+      }
+    } else {
+      // タグ指定がある場合はタグを持つコンテンツを取得
+      const { data: contentIdsData, error: contentIdsError } = await supabase
+        .from("content_tags")
+        .select("content_id")
+        .eq("tag_id", tagId);
 
-  if (error) {
-    console.log("[error] selectContentsByTagId: ", error.message);
-    return null;
-  }
+      if (contentIdsError) {
+        console.log("[error] ", contentIdsError.message);
+        return null;
+      }
+      const contentIds = contentIdsData.map(({ content_id }) => content_id);
 
-  return data;
-});
+      if (range) {
+        response = await supabase
+          .from("contents")
+          .select("*")
+          .in("id", contentIds)
+          .order("created_at", { ascending: false })
+          .range(range.offset, range.offset + range.limit - 1);
+      } else {
+        response = await supabase
+          .from("contents")
+          .select("*")
+          .in("id", contentIds)
+          .order("created_at", { ascending: false });
+      }
+    }
+
+    if (response.error) {
+      console.log("[error] ", response.error.message);
+      return null;
+    }
+
+    return response.data;
+  },
+);
+
+// ----
 
 export const insertContentWithTags = cache(
   async (props: {

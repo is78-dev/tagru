@@ -7,13 +7,10 @@ import { twMerge } from "tailwind-merge";
 
 type Props = {
   initText?: string;
-  handleClickSaveButton: (text: string) => Promise<void>;
+  onSave: (text: string) => Promise<void>;
 };
 
-export default function NoteTextArea({
-  initText = "",
-  handleClickSaveButton,
-}: Props) {
+export default function NoteTextArea({ initText = "", onSave }: Props) {
   const { toast } = useToast();
   const [noteText, setNoteText] = useState<string>(initText);
   const [beforeText, setBeforeText] = useState<string>(initText);
@@ -22,7 +19,7 @@ export default function NoteTextArea({
   const handleClickSave = async () => {
     try {
       setIsSubmitting(true);
-      await handleClickSaveButton(noteText);
+      await onSave(noteText);
       setBeforeText(noteText);
       toast({
         title: "保存しました",
@@ -51,7 +48,7 @@ export default function NoteTextArea({
       <Textarea
         value={noteText}
         onChange={(e) => setNoteText(e.target.value)}
-        placeholder="メモ"
+        placeholder="メモを入力"
         className="h-full resize-none bg-card"
       />
       <Button

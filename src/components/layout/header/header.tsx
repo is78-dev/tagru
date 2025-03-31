@@ -1,32 +1,27 @@
 import { Button } from "@/components/ui/button";
 import { Tags } from "lucide-react";
 import Link from "next/link";
-import UserIcon from "@/components/layout/header/user-icon";
+import UserIcon from "./user-icon/user-icon";
 import { isAuthenticated } from "@/services/usersService";
+import TagSearchNavigator from "./tag-search-navigator/tag-search-navigator";
 
 export default async function Header() {
   const isAuth = await isAuthenticated();
 
   return (
-    <header className="flex w-full items-center border-b bg-card px-4 py-2">
+    <header className="relative flex w-full items-center gap-4 border-b bg-card px-2 py-1 shadow-sm">
       <Button asChild size="sm" variant="ghost" className="text-lg font-bold">
         <Link href="/" prefetch={false}>
           <Tags size={24} />
           <span>Tagru</span>
         </Link>
       </Button>
-      <div className="flex-1"></div>
-      <div className="px-2">
-        {isAuth ? (
-          <UserIcon />
-        ) : (
-          <Button asChild size="sm" variant="default">
-            <Link href="/login" prefetch={false}>
-              ログイン
-            </Link>
-          </Button>
-        )}
+      <div className="flex-1">
+        <div className="z-40 flex w-full justify-center">
+          <TagSearchNavigator />
+        </div>
       </div>
+      {isAuth && <UserIcon className="mr-2" />}
     </header>
   );
 }

@@ -1,75 +1,63 @@
 import {
-  selectContentByContentId,
-  selectAllContents,
-  selectContentsByTagId,
   insertContentWithTags,
   updateContentNoteByContentId,
   deleteContentByContentId,
   updateContentByContentId,
+  getContentRepository,
+  getContentListRepository,
 } from "@/repositories/contentsRepository";
-import { Content, ContentWithTags, Tag } from "@/types/format";
+import { Content, Tag } from "@/types/format";
 import { getUser } from "./usersService";
 import { extractYoutubeVideoId } from "@/utils/common/extractYoutubeVideoId";
 import { UpdateContentFormType } from "@/types/zod-schema";
 
-export const getAllContents = async () => {
-  const contentsData = await selectAllContents();
-
-  if (!contentsData) {
-    throw new Error("コンテンツ一覧データの取得に失敗しました");
-  }
-
-  return contentsData;
-};
-
-export const getContentByContentId = async (
+// 取得
+export const getContentService = async (
   contentId: string,
 ): Promise<Content> => {
-  const contentData = await selectContentByContentId(contentId);
+  const data = await getContentRepository(contentId);
 
-  if (!contentData) {
+  if (!data) {
     throw new Error("コンテンツデータの取得に失敗しました");
   }
 
   return {
-    contentId: contentData.id,
-    type: contentData.type,
-    title: contentData.title,
-    note: contentData.note,
-    srcUrl: contentData.src_url,
-    thumbnailUrl: contentData.thumbnail_url,
-    contentUrl: contentData.content_url,
+    contentId: data.id,
+    title: data.title,
+    note: data.note,
+    srcUrl: data.src_url,
+    thumbnailUrl: data.thumbnail_url,
+    contentUrl: data.content_url,
   };
 };
 
-export const getContentsByTagId = async (tagId: string) => {
-  const rawData = await selectContentsByTagId(tagId);
+// 一覧取得
+export const getContentListService = async ({
+  range,
+  tagId,
+}: {
+  range?: { offset: number; limit: number };
+  tagId?: string;
+}): Promise<Content[]> => {
+  const data = await getContentListRepository({ range, tagId });
 
-  if (!rawData) {
+  if (!data) {
     throw new Error("コンテンツデータの取得に失敗しました");
   }
 
-  // ContentWithTags型にフォーマットする
-  const contentMap = new Map<string, ContentWithTags>();
-  rawData.forEach(
-    ({ content_id, title, thumbnail_url, tag_id, tag_name, is_favorite }) => {
-      if (!contentMap.has(content_id)) {
-        contentMap.set(content_id, {
-          contentId: content_id,
-          title,
-          thumbnailUrl: thumbnail_url,
-          tags: [],
-        });
-      }
-      contentMap.get(content_id)!.tags.push({
-        tagId: tag_id,
-        tagName: tag_name,
-        isFavorite: is_favorite,
-      });
-    },
-  );
-  return Array.from(contentMap.values());
+  return data.map((c) => {
+    return {
+      contentId: c.id,
+      title: c.title,
+      note: c.note,
+      srcUrl: c.src_url,
+      thumbnailUrl: c.thumbnail_url,
+      contentUrl: c.content_url,
+    };
+  });
 };
+
+// ---
 
 export const createYoutubeContent = async (
   srcUrl: string,
@@ -122,7 +110,6 @@ export const updateContentNote = async (
 
   return {
     contentId: updatedContentData.id,
-    type: updatedContentData.type,
     title: updatedContentData.title,
     note: updatedContentData.note,
     srcUrl: updatedContentData.src_url,

@@ -1,7 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { cache } from "react";
 
-export const selectTagByTagId = cache(async (tagId: string) => {
+// 取得
+export const getTagRepository = cache(async (tagId: string) => {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -11,25 +12,80 @@ export const selectTagByTagId = cache(async (tagId: string) => {
     .single();
 
   if (error) {
-    console.log("[error] selectTagByTagId: ", error.message);
+    console.log("[error] ", error.message);
     return null;
   }
 
   return data;
 });
 
-export const selectAllTags = cache(async () => {
-  const supabase = await createClient();
+// 一覧取得
+export const getTagListRepository = cache(
+  async ({
+    range,
+    contentId,
+  }: {
+    range?: {
+      offset: number;
+      limit: number;
+    };
+    contentId?: string;
+  }) => {
+    const supabase = await createClient();
+    let response;
 
-  const { data, error } = await supabase.from("tags").select("*");
+    if (!contentId) {
+      // コンテンツ指定がない場合は全件取得
+      if (range) {
+        response = await supabase
+          .from("tags")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .range(range.offset, range.offset + range.limit - 1);
+      } else {
+        response = await supabase
+          .from("tags")
+          .select("*")
+          .order("created_at", { ascending: false });
+      }
+    } else {
+      // コンテンツ指定がある場合はコンテンツが持つタグを取得
+      const { data: tagIdsData, error: tagIdsError } = await supabase
+        .from("content_tags")
+        .select("tag_id")
+        .eq("content_id", contentId);
 
-  if (error) {
-    console.log("[error] selectAllTags: ", error.message);
-    return null;
-  }
+      if (tagIdsError) {
+        console.log("[error] ", tagIdsError.message);
+        return null;
+      }
+      const tagIds = tagIdsData.map(({ tag_id }) => tag_id);
 
-  return data;
-});
+      if (range) {
+        response = await supabase
+          .from("tags")
+          .select("*")
+          .in("id", tagIds)
+          .order("created_at", { ascending: false })
+          .range(range.offset, range.offset + range.limit - 1);
+      } else {
+        response = await supabase
+          .from("tags")
+          .select("*")
+          .in("id", tagIds)
+          .order("created_at", { ascending: false });
+      }
+    }
+    if (response.error) {
+      console.log("[error] ", response.error.message);
+      return null;
+    }
+
+    return response.data;
+  },
+);
+
+// ---
 
 export const selectTagByTagName = cache(async (tagName: string) => {
   const supabase = await createClient();
@@ -42,22 +98,6 @@ export const selectTagByTagName = cache(async (tagName: string) => {
 
   if (error) {
     console.log("[error] selectTagByTagName: ", error.message);
-    return null;
-  }
-
-  return data;
-});
-
-export const selectTagsByContentId = cache(async (contentId: string) => {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from("content_tags")
-    .select("tags(*)")
-    .eq("content_id", contentId);
-
-  if (error) {
-    console.log("[error] selectTagsByContentId: ", error.message);
     return null;
   }
 

@@ -13,7 +13,6 @@ export type ContentWithTags = {
 
 export type Content = {
   contentId: string;
-  type: string;
   title: string;
   note: string;
   srcUrl: string;

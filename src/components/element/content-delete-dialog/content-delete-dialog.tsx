@@ -1,3 +1,5 @@
+"use client";
+
 import { deleteContentAction } from "@/actions/contentAction";
 import { Button } from "@/components/ui/button";
 import {
@@ -5,26 +7,30 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 type Props = {
   contentId: string;
   redirectUrl: string;
+  children: ReactNode;
 };
 
-export default function DeleteContentDialog({ contentId, redirectUrl }: Props) {
+export default function ContentDeleteDialog({
+  contentId,
+  redirectUrl,
+  children,
+}: Props) {
   const { toast } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleClickDeleteButton = async (contentId: string) => {
+  const handleDelete = async (contentId: string) => {
     try {
       setLoading(true);
       await deleteContentAction(contentId);
@@ -54,12 +60,8 @@ export default function DeleteContentDialog({ contentId, redirectUrl }: Props) {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button type="button" variant="destructive" className="bg-card">
-          コンテンツを削除
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="bg-card sm:max-w-[425px]">
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="max-w-xl bg-card">
         <DialogHeader>
           <DialogTitle>コンテンツの削除</DialogTitle>
           <DialogDescription>
@@ -78,7 +80,7 @@ export default function DeleteContentDialog({ contentId, redirectUrl }: Props) {
             </Button>
           </DialogClose>
           <Button
-            onClick={() => handleClickDeleteButton(contentId)}
+            onClick={() => handleDelete(contentId)}
             variant="destructive"
             type="button"
             disabled={loading}
