@@ -6,7 +6,7 @@ type Props = {
   tags: Tag[];
 };
 
-export default function ContentTagArea({ tags }: Props) {
+export default function TagListArea({ tags }: Props) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {tags.map((tag) => (

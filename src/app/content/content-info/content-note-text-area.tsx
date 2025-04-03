@@ -19,5 +19,5 @@ export default function ContentNoteTextArea({ content, setLoading }: Props) {
     setLoading(false);
   };
 
-  return <NoteTextArea initText={content.note} onSave={handleSave} />;
+  return <NoteTextArea initialText={content.note} onSave={handleSave} />;
 }

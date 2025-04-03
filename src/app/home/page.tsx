@@ -1,18 +1,15 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ContentCreateDialog from "@/components/element/content-create-dialog/content-create-dialog";
 import { Button } from "@/components/ui/button";
-import InfinityTagList from "./infinity-tag-list";
 import TagCreateDialog from "@/components/element/tag-create-dialog/tag-create-dialog";
 import InfinityContentList from "@/components/element/infinity-content-list/infinity-content-list";
 import { getContentListService } from "@/services/contentsService";
-import { getTagListService } from "@/services/tagsService";
+import AllTagList from "./all-tag-list";
+import TagSearchNavigator from "@/components/layout/header/tag-search-navigator/tag-search-navigator";
 
 export default async function Page() {
   const initialContents = await getContentListService({
     range: { offset: 0, limit: 30 },
-  });
-  const initialTags = await getTagListService({
-    range: { offset: 0, limit: 100 },
   });
 
   return (
@@ -47,7 +44,10 @@ export default async function Page() {
           />
         </TabsContent>
         <TabsContent value="tag" className="mt-4">
-          <InfinityTagList initialTags={initialTags} chunkSize={100} />
+          <div className="flex flex-col items-center gap-4">
+            <TagSearchNavigator />
+            <AllTagList />
+          </div>
         </TabsContent>
       </Tabs>
     </div>

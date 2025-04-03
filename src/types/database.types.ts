@@ -108,6 +108,45 @@ export type Database = {
         }
         Relationships: []
       }
+      tag_tags: {
+        Row: {
+          child_tag_id: string
+          created_at: string
+          id: number
+          parent_tag_id: string
+          user_id: string
+        }
+        Insert: {
+          child_tag_id: string
+          created_at?: string
+          id?: number
+          parent_tag_id: string
+          user_id: string
+        }
+        Update: {
+          child_tag_id?: string
+          created_at?: string
+          id?: number
+          parent_tag_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tag_tags_child_tag_id_fkey"
+            columns: ["child_tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tag_tags_parent_tag_id_fkey"
+            columns: ["parent_tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tags: {
         Row: {
           created_at: string

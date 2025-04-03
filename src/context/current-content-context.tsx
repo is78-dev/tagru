@@ -1,8 +1,9 @@
 "use client";
 
 import { getContentAction } from "@/actions/contentAction";
-import { getTagListAction } from "@/actions/tagAction";
+import { getContentTagListAction, getTagListAction } from "@/actions/tagAction";
 import { toast } from "@/hooks/use-toast";
+import { getContentTagListService } from "@/services/tagsService";
 import { Content, Tag } from "@/types/format";
 import {
   ReactNode,
@@ -32,9 +33,9 @@ export function CurrentContentContext({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       const contentData = await getContentAction(contentId);
-      const tagsData = await getTagListAction({ contentId });
+      const contentTagsData = await getContentTagListAction(contentId);
       setCurrentContent(contentData);
-      setCurrentContentTags(tagsData);
+      setCurrentContentTags(contentTagsData);
     } catch (error) {
       if (error instanceof Error) {
         toast({

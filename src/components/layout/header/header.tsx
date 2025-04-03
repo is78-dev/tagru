@@ -18,7 +18,7 @@ export default async function Header() {
       </Button>
       <div className="flex-1">
         <div className="z-40 flex w-full justify-center">
-          <TagSearchNavigator />
+          {/* <TagSearchNavigator /> */}
         </div>
       </div>
       {isAuth && <UserIcon className="mr-2" />}

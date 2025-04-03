@@ -4,12 +4,12 @@ import { twMerge } from "tailwind-merge";
 import { Content, Tag } from "@/types/format";
 import { useState } from "react";
 import ContentNoteTextArea from "./content-note-text-area";
-import ContentTagArea from "./content-tag-area";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import ContentDeleteDialog from "@/components/element/content-delete-dialog/content-delete-dialog";
 import ContentUpdateDialog from "@/components/element/content-update-dialog/content-update-dialog";
+import TagListArea from "@/components/element/tag-list-area/tag-list-area";
 
 type Props = {
   content: Content;
@@ -40,7 +40,7 @@ export default function ContentInfo({
         {/* タグ */}
         <div className="space-y-2">
           <div className="h-[90px] overflow-y-auto">
-            <ContentTagArea
+            <TagListArea
               tags={tags
                 .filter((tag) => tag.isFavorite)
                 .concat(tags.filter((tag) => !tag.isFavorite))}

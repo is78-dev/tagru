@@ -1,5 +1,5 @@
 import { Tag } from "@/types/format";
-import { Plus, Search, Sparkle } from "lucide-react";
+import { Plus, Search, Star } from "lucide-react";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -41,7 +41,6 @@ export default function TagSearchCreateBox({
         .map(({ tag }) => tag),
     [lowerQuery, tags],
   );
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const itemRefs = useRef<HTMLLIElement[]>([]);
 
   const hasExactMatch = useMemo(
@@ -59,7 +58,7 @@ export default function TagSearchCreateBox({
             "お気に入りタグを作成して追加",
             ...filteredTags,
           ],
-    [hasExactMatch, query],
+    [hasExactMatch, query, filteredTags],
   );
 
   useEffect(() => {
@@ -84,27 +83,20 @@ export default function TagSearchCreateBox({
       onSelect(item);
     }
     setQuery("");
-    setIsOpen(false);
-    if (inputRef) {
-      inputRef.current?.blur();
-    }
   };
 
   // キーボード操作でリスト内を移動できるようにする
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (filteredTags.length === 0) return;
-
+    const optionLength = options.length;
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev + 1) % filteredTags.length);
+      setSelectedIndex((prev) => (prev + 1) % optionLength);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setSelectedIndex(
-        (prev) => (prev - 1 + filteredTags.length) % filteredTags.length,
-      );
+      setSelectedIndex((prev) => (prev - 1 + optionLength) % optionLength);
     } else if (e.key === "Enter") {
       e.preventDefault();
-      const selectedItem = filteredTags[selectedIndex];
+      const selectedItem = options[selectedIndex];
       handleSelectItem(selectedItem);
     }
   };
@@ -120,7 +112,6 @@ export default function TagSearchCreateBox({
       >
         <Search className="mr-2 size-4 shrink-0 opacity-50" />
         <input
-          ref={inputRef}
           type="text"
           className="grow py-2 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed"
           value={query}
@@ -144,7 +135,7 @@ export default function TagSearchCreateBox({
             )}
             onMouseDown={(e) => e.preventDefault()} // クリック時にonBlurが発火しないようにする
           >
-            <ul className="max-h-40 overflow-auto">
+            <ul className="max-h-36 overflow-auto">
               {options.map((option, index) => (
                 <li
                   key={index}
@@ -154,7 +145,7 @@ export default function TagSearchCreateBox({
                     }
                   }}
                   className={twMerge(
-                    "cursor-pointer rounded-md p-2",
+                    "cursor-pointer rounded-md p-2 text-sm",
                     index === selectedIndex && "bg-accent",
                   )}
                   onMouseDown={() => setSelectedIndex(index)}
@@ -168,14 +159,14 @@ export default function TagSearchCreateBox({
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <Sparkle className="size-4 text-muted-foreground" />
+                        <Star className="size-4 text-muted-foreground" />
                         <span>{option}</span>
                       </div>
                     )
                   ) : option.isFavorite ? (
                     <div className="flex items-center justify-between gap-2">
                       <span>{option.tagName}</span>
-                      <Sparkle className="size-4 text-muted-foreground" />
+                      <Star className="size-4 text-muted-foreground" />
                     </div>
                   ) : (
                     <div>{option.tagName}</div>

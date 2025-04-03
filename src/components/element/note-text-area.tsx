@@ -1,20 +1,24 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useClientError } from "@/hooks/use-client-error";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 type Props = {
-  initText?: string;
+  initialText: string;
   onSave: (text: string) => Promise<void>;
 };
 
-export default function NoteTextArea({ initText = "", onSave }: Props) {
+export default function NoteTextArea({ initialText, onSave }: Props) {
   const { toast } = useToast();
-  const [noteText, setNoteText] = useState<string>(initText);
-  const [beforeText, setBeforeText] = useState<string>(initText);
+  const [noteText, setNoteText] = useState<string>(initialText);
+  const [beforeText, setBeforeText] = useState<string>(initialText);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const { clientErrorHandler } = useClientError();
+
+  useEffect(() => {}, [initialText]);
 
   const handleClickSave = async () => {
     try {
@@ -25,19 +29,7 @@ export default function NoteTextArea({ initText = "", onSave }: Props) {
         title: "保存しました",
       });
     } catch (error) {
-      if (error instanceof Error) {
-        toast({
-          variant: "destructive",
-          title: "エラー",
-          description: error.message,
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "エラー",
-          description: "予期せぬエラーが発生しました",
-        });
-      }
+      clientErrorHandler(error);
     } finally {
       setIsSubmitting(false);
     }

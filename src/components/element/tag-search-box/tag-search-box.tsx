@@ -1,5 +1,5 @@
 import { Tag } from "@/types/format";
-import { Search, Sparkle } from "lucide-react";
+import { Search, Star } from "lucide-react";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -64,16 +64,13 @@ export default function TagSearchBox({
 
   // キーボード操作でリスト内を移動できるようにする
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (filteredTags.length === 0) return;
-
+    const optionLength = filteredTags.length;
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev + 1) % filteredTags.length);
+      setSelectedIndex((prev) => (prev + 1) % optionLength);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setSelectedIndex(
-        (prev) => (prev - 1 + filteredTags.length) % filteredTags.length,
-      );
+      setSelectedIndex((prev) => (prev - 1 + optionLength) % optionLength);
     } else if (e.key === "Enter") {
       e.preventDefault();
       const selectedItem = filteredTags[selectedIndex];
@@ -116,7 +113,7 @@ export default function TagSearchBox({
             )}
             onMouseDown={(e) => e.preventDefault()} // クリック時にonBlurが発火しないようにする
           >
-            <ul className="max-h-40 overflow-auto">
+            <ul className="max-h-36 overflow-auto">
               {filteredTags.map((item, index) => (
                 <li
                   key={index}
@@ -126,7 +123,7 @@ export default function TagSearchBox({
                     }
                   }}
                   className={twMerge(
-                    "cursor-pointer rounded-md p-2",
+                    "cursor-pointer rounded-md p-2 text-sm",
                     index === selectedIndex && "bg-accent",
                   )}
                   onMouseDown={() => setSelectedIndex(index)}
@@ -135,7 +132,7 @@ export default function TagSearchBox({
                   {item.isFavorite ? (
                     <div className="flex items-center justify-between gap-2">
                       <span>{item.tagName}</span>
-                      <Sparkle className="size-4 text-muted-foreground" />
+                      <Star className="size-4 text-muted-foreground" />
                     </div>
                   ) : (
                     <div>{item.tagName}</div>

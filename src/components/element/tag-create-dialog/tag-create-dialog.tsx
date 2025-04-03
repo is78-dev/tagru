@@ -24,7 +24,7 @@ export default function TagCreateDialog({ children }: Props) {
         <DialogHeader className="pb-4">
           <DialogTitle>タグの作成</DialogTitle>
         </DialogHeader>
-        <TagCreateForm onFormClose={() => setOpen(false)} />
+        <TagCreateForm onClose={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );

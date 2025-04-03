@@ -3,12 +3,14 @@ import { getContentsAction } from "@/actions/contentAction";
 import ContentCard from "@/components/element/content-card/content-card";
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { Content } from "@/types/format";
+import { ReactNode } from "react";
 
 type Props = {
   initialContents?: Content[];
   chunkSize?: number;
   currentContentId?: string;
   currentTagId?: string;
+  children?: ReactNode;
 };
 
 export default function InfinityContentList({
@@ -16,6 +18,7 @@ export default function InfinityContentList({
   chunkSize = 10,
   currentContentId,
   currentTagId,
+  children,
 }: Props) {
   const {
     items: contents,
@@ -31,6 +34,7 @@ export default function InfinityContentList({
 
   return (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-x-4 gap-y-6">
+      {children}
       {contents.map((content, index) => (
         <ContentCard
           key={index}

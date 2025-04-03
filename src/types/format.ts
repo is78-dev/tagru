@@ -2,6 +2,19 @@ export type Tag = {
   tagId: string;
   tagName: string;
   isFavorite: boolean;
+  note: string;
+};
+
+export type CreateTag = {
+  tagName: string;
+  isFavorite: boolean;
+  note: string;
+};
+
+export type UpdateTag = {
+  tagName?: string;
+  isFavorite?: boolean;
+  note?: string;
 };
 
 export type ContentWithTags = {

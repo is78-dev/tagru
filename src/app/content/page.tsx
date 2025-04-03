@@ -5,7 +5,11 @@ import {
   getContentListService,
   getContentService,
 } from "@/services/contentsService";
-import { getTagListService, getTagService } from "@/services/tagsService";
+import {
+  getContentTagListService,
+  getTagListService,
+  getTagService,
+} from "@/services/tagsService";
 import InfinityContentList from "@/components/element/infinity-content-list/infinity-content-list";
 import ContentCreateDialog from "@/components/element/content-create-dialog/content-create-dialog";
 import ContentInfo from "./content-info/content-info";
@@ -21,7 +25,7 @@ export default async function Page({ searchParams }: PageProps) {
   if (!(typeof tagId === "string" || typeof tagId === "undefined")) notFound();
 
   const content = await getContentService(contentId);
-  const tags = await getTagListService({ contentId });
+  const tags = await getContentTagListService(contentId);
   const currentTag = tagId ? await getTagService(tagId) : undefined;
   const initialContents = await getContentListService({
     range: { offset: 0, limit: 30 },

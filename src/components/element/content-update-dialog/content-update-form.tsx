@@ -86,7 +86,11 @@ export default function ContentUpdateForm({ content, tags }: Props) {
     try {
       setIsCreatingTag(true);
       setLoading(true);
-      const createdTag = await createTagAction({ tagName, isFavorite });
+      const createdTag = await createTagAction({
+        tagName,
+        isFavorite,
+        note: "",
+      });
       setSelectedTags((prev) => [createdTag, ...prev]);
       refreshAllTags();
       toast({ title: "タグを作成して追加しました" });

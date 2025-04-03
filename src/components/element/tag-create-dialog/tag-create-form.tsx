@@ -12,27 +12,30 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { createTagFormSchema, CreateTagFormType } from "@/types/zod-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAllTags } from "@/context/all-tags-context";
 import { Switch } from "@/components/ui/switch";
+import { useClientError } from "@/hooks/use-client-error";
+import { Textarea } from "@/components/ui/textarea";
 
 type Props = {
-  onFormClose: () => void;
+  onClose: () => void;
 };
 
-export default function TagCreateForm({ onFormClose }: Props) {
+export default function TagCreateForm({ onClose }: Props) {
   const [loading, setLoading] = useState<boolean>(false);
-  const { allTags } = useAllTags();
-  const { toast } = useToast();
+  const { allTags, refreshAllTags } = useAllTags();
+  const { clientErrorHandler } = useClientError();
   const form = useForm<CreateTagFormType>({
     resolver: zodResolver(createTagFormSchema),
     defaultValues: {
       tagName: "",
       isFavorite: false,
+      note: "",
     },
   });
 
@@ -42,7 +45,7 @@ export default function TagCreateForm({ onFormClose }: Props) {
     if (!allTags.every((tag) => tag.tagName !== data.tagName)) {
       form.setError("tagName", {
         type: "manual",
-        message: "タグ名が重複しています",
+        message: "同名のタグが既に存在します",
       });
       return;
     }
@@ -50,21 +53,14 @@ export default function TagCreateForm({ onFormClose }: Props) {
     try {
       setLoading(true);
       await createTagAction(data);
-      window.location.reload();
+      toast({
+        variant: "default",
+        title: "タグを作成しました",
+      });
+      refreshAllTags();
+      onClose();
     } catch (error) {
-      if (error instanceof Error) {
-        toast({
-          variant: "destructive",
-          title: "エラー",
-          description: error.message,
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "エラー",
-          description: "予期せぬエラーが発生しました",
-        });
-      }
+      clientErrorHandler(error);
     } finally {
       form.clearErrors("tagName");
       setLoading(false);
@@ -122,13 +118,31 @@ export default function TagCreateForm({ onFormClose }: Props) {
             </FormItem>
           )}
         />
+        {/* メモ */}
+        <FormField
+          control={form.control}
+          name="note"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>メモ</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="メモを入力"
+                  className="h-[150px] resize-none bg-card"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         {/* フォーム操作ボタン */}
         <div className="flex justify-between">
           <Button
             variant="outline"
             type="button"
             className="bg-card"
-            onClick={onFormClose}
+            onClick={onClose}
           >
             キャンセル
           </Button>
