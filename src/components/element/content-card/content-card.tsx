@@ -30,6 +30,8 @@ export default function ContentCard({
             "size-full object-cover transition-all duration-150 group-hover/card:scale-105",
             disabled && "brightness-50",
           )}
+          alt="thumbnail"
+          loading="lazy"
         />
       </div>
       {/* タイトル */}

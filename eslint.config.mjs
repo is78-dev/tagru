@@ -13,8 +13,8 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
-      " @typescript-eslint/no-unused-vars": "warn",
-      "no-unused-vars": "warn",
+      "@next/next/no-img-element": "off", // 通常imgタグの使用を許可
+      "react-hooks/exhaustive-deps": "off", // useEffectの依存配列の警告を無効化
     },
   },
 ];

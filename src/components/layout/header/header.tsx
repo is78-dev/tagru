@@ -3,7 +3,6 @@ import { Tags } from "lucide-react";
 import Link from "next/link";
 import UserIcon from "./user-icon/user-icon";
 import { isAuthenticated } from "@/services/usersService";
-import TagSearchNavigator from "./tag-search-navigator/tag-search-navigator";
 
 export default async function Header() {
   const isAuth = await isAuthenticated();
@@ -17,9 +16,7 @@ export default async function Header() {
         </Link>
       </Button>
       <div className="flex-1">
-        <div className="z-40 flex w-full justify-center">
-          {/* <TagSearchNavigator /> */}
-        </div>
+        <div className="z-40 flex w-full justify-center"></div>
       </div>
       {isAuth && <UserIcon className="mr-2" />}
     </header>

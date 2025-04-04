@@ -1,9 +1,8 @@
 "use client";
 
 import { getContentAction } from "@/actions/contentAction";
-import { getContentTagListAction, getTagListAction } from "@/actions/tagAction";
+import { getContentTagListAction } from "@/actions/tagAction";
 import { toast } from "@/hooks/use-toast";
-import { getContentTagListService } from "@/services/tagsService";
 import { Content, Tag } from "@/types/format";
 import {
   ReactNode,

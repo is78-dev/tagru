@@ -7,7 +7,6 @@ import {
 } from "@/services/contentsService";
 import {
   getContentTagListService,
-  getTagListService,
   getTagService,
 } from "@/services/tagsService";
 import InfinityContentList from "@/components/element/infinity-content-list/infinity-content-list";
