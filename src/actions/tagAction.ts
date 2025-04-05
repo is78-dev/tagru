@@ -69,9 +69,14 @@ export const getChildTagListAction = async (tagId: string) => {
 
 // タグ、親タグ、子タグを取得
 export const getRelativeTagAction = async (tagId: string) => {
-  const tag = await getTagService(tagId);
-  const parentTags = await getParentTagListService(tagId);
-  const childTags = await getChildTagListService(tagId);
+  const tagPromise = await getTagService(tagId);
+  const parentTagsPromise = await getParentTagListService(tagId);
+  const childTagsPromise = await getChildTagListService(tagId);
+  const [tag, parentTags, childTags] = await Promise.all([
+    tagPromise,
+    parentTagsPromise,
+    childTagsPromise,
+  ]);
   return { tag, parentTags, childTags };
 };
 
@@ -98,8 +103,9 @@ export const updateRelativeTagAction = async (
     note: data.note,
   });
 
-  updateParentTagService(tagId, data.parentTagIds);
-  updateChildTagService(tagId, data.childTagIds);
+  const updateParentPromise = updateParentTagService(tagId, data.parentTagIds);
+  const updateChildPromsie = updateChildTagService(tagId, data.childTagIds);
+  await Promise.all([updateParentPromise, updateChildPromsie]);
 
   return updatedTag;
 };

@@ -20,13 +20,19 @@ export default async function Page({ searchParams }: Props) {
   const { t: tagId } = await searchParams;
   if (typeof tagId !== "string") notFound();
 
-  const tag = await getTagService(tagId);
-  const parentTags = await getParentTagListService(tag.tagId);
-  const childTags = await getChildTagListService(tag.tagId);
-  const initialContents = await getContentListService({
+  const tagPromise = getTagService(tagId);
+  const parentTagsPromise = getParentTagListService(tagId);
+  const childTagsPromise = getChildTagListService(tagId);
+  const initialContentsPromise = getContentListService({
     range: { offset: 0, limit: 30 },
     tagId,
   });
+  const [tag, parentTags, childTags, initialContents] = await Promise.all([
+    tagPromise,
+    parentTagsPromise,
+    childTagsPromise,
+    initialContentsPromise,
+  ]);
 
   return (
     <CurrentTagContext tagId={tagId}>

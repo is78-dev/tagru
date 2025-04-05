@@ -23,13 +23,18 @@ export default async function Page({ searchParams }: PageProps) {
   if (typeof contentId !== "string") notFound();
   if (!(typeof tagId === "string" || typeof tagId === "undefined")) notFound();
 
-  const content = await getContentService(contentId);
-  const tags = await getContentTagListService(contentId);
-  const currentTag = tagId ? await getTagService(tagId) : undefined;
-  const initialContents = await getContentListService({
+  const contentPromise = getContentService(contentId);
+  const tagsPromise = getContentTagListService(contentId);
+  const initialContentsPromise = getContentListService({
     range: { offset: 0, limit: 30 },
     tagId,
   });
+  const [content, tags, initialContents] = await Promise.all([
+    contentPromise,
+    tagsPromise,
+    initialContentsPromise,
+  ]);
+  const currentTag = tagId ? await getTagService(tagId) : undefined;
 
   return (
     <div className="flex flex-col gap-6 py-6">
