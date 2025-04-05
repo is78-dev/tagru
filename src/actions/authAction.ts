@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 export const login = async () => {
   const supabase = await createClient();
-  console.log(`${process.env.API_BASE_URL}/auth/callback`);
+
   const {
     data: { url },
   } = await supabase.auth.signInWithOAuth({
