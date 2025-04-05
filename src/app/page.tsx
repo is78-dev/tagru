@@ -1,60 +1,101 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight, FolderTree, NotebookPen, Tag } from "lucide-react";
-import Link from "next/link";
+import Image from "next/image";
 
-export default function Page() {
+export default function Home() {
   return (
-    <div className="mx-auto py-6">
-      <section className="flex flex-col items-center py-40">
-        <h1 className="mb-3 text-4xl font-extrabold">Organize with tags.</h1>
-        <p className="mb-8 text-muted-foreground">
-          Tagruはyoutube上の動画にタグをつけて管理できるオンラインサービスです。
-          <br />
-          動画ごとのメモや、タグの階層化により、自分だけの動画データベースを作成できます。
-        </p>
-        <Button className="rounded-full p-4 px-6 text-lg" asChild>
-          <Link href="/login">
-            ログイン
-            <ArrowRight className="size-5" />
-          </Link>
-        </Button>
-      </section>
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+        <Image
+          className="dark:invert"
+          src="/next.svg"
+          alt="Next.js logo"
+          width={180}
+          height={38}
+          priority
+        />
+        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+          <li className="mb-2">
+            Get started by editing{" "}
+            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
+              src/app/page.tsx
+            </code>
+            .
+          </li>
+          <li>Save and see your changes instantly.</li>
+        </ol>
 
-      <section className="flex flex-wrap justify-center gap-10">
-        <div className="w-64">
-          <h2 className="mb-2 text-xl font-bold">
-            <Tag className="mr-2 inline-block size-5" />
-            タグで分類
-          </h2>
-          <p className="text-muted-foreground">
-            動画に自由なタグを付けて、
-            <br />
-            自分だけのルールで分類できます。
-          </p>
+        <div className="flex gap-4 items-center flex-col sm:flex-row">
+          <a
+            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              className="dark:invert"
+              src="/vercel.svg"
+              alt="Vercel logomark"
+              width={20}
+              height={20}
+            />
+            Deploy now
+          </a>
+          <a
+            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
+            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Read our docs
+          </a>
         </div>
-        <div className="w-64">
-          <h2 className="mb-2 text-xl font-bold">
-            <NotebookPen className="mr-2 inline-block size-5" />
-            メモを残せる
-          </h2>
-          <p className="text-muted-foreground">
-            動画やタグにメモを追加して、
-            <br />
-            内容を補足できます。
-          </p>
-        </div>
-        <div className="w-64">
-          <h2 className="mb-2 text-xl font-bold">
-            <FolderTree className="mr-2 inline-block size-5" />
-            親子タグで階層管理
-          </h2>
-          <p className="text-muted-foreground">
-            タグに親子関係を設定できるので、
-            <br />
-            タグ同士のリンクが可能です。
-          </p>
-        </div>
-      </section>
+      </main>
+      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/file.svg"
+            alt="File icon"
+            width={16}
+            height={16}
+          />
+          Learn
+        </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/window.svg"
+            alt="Window icon"
+            width={16}
+            height={16}
+          />
+          Examples
+        </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/globe.svg"
+            alt="Globe icon"
+            width={16}
+            height={16}
+          />
+          Go to nextjs.org →
+        </a>
+      </footer>
     </div>
   );
 }
