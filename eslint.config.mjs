@@ -11,12 +11,6 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
-  {
-    rules: {
-      "@next/next/no-img-element": "off", // 通常imgタグの使用を許可
-      "react-hooks/exhaustive-deps": "off", // useEffectの依存配列の警告を無効化
-    },
-  },
 ];
 
 export default eslintConfig;
