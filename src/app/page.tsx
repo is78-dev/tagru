@@ -8,7 +8,7 @@ export default function Page() {
       <section className="flex flex-col items-center py-40">
         <h1 className="mb-3 text-4xl font-extrabold">Organize with tags.</h1>
         <p className="mb-8 text-muted-foreground">
-          Tagruはyoutube上の動画にタグをつけて管理できるオンラインサービスです。
+          TagruはYouTube上の動画にタグをつけて管理できるオンラインサービスです。
           <br />
           動画ごとのメモや、タグの階層化により、自分だけの動画データベースを作成できます。
         </p>
