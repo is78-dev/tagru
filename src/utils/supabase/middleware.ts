@@ -39,18 +39,13 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  console.log("[updateSession] ", user ? "login user" : "not login user");
+  console.log("[updateSession] ", user ? "login user" : "unknown user");
 
   const path = request.nextUrl.pathname;
 
   if (!user) {
     // 認証前の場合
-    if (
-      path === "/" ||
-      path === "/login" ||
-      path === "/error" ||
-      path.startsWith("/api/auth")
-    ) {
+    if (path === "/" || path === "/login" || path.startsWith("/api/auth")) {
       // 認証を必要としないパスはそのまま通す
       return supabaseResponse;
     } else {

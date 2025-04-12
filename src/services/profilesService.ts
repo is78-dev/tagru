@@ -1,39 +1,57 @@
 import {
-  insertProfile,
-  selectProfileByUserId,
+  createProfileRepository,
+  getProfileRepository,
 } from "@/repositories/profilesRepository";
-import { getUser } from "@/services/usersService";
+import { getUserService } from "@/services/usersService";
+import { Profile } from "@/types/format";
 
-export const registerProfile = async () => {
-  const userData = await getUser();
+// 作成
+export const createProfileService = async (): Promise<Profile> => {
+  const user = await getUserService();
 
-  const profileData = await selectProfileByUserId(userData.id);
+  const profile = await getProfileRepository(user.id);
 
-  if (profileData) {
-    return profileData;
+  if (profile) {
+    return {
+      profileId: profile.id,
+      userId: profile.user_id,
+      userName: profile.user_name,
+      avatarUrl: profile.avatar_url,
+    };
   }
 
-  const createdProfileData = await insertProfile(
-    userData.id,
-    userData.user_metadata.name,
-    userData.user_metadata.avatar_url,
+  const createdProfile = await createProfileRepository(
+    user.id,
+    user.user_metadata.name,
+    user.user_metadata.avatar_url,
   );
 
-  if (!createdProfileData) {
+  if (!createdProfile) {
     throw new Error("プロフィールの作成に失敗しました");
   }
 
-  return createdProfileData;
+  return {
+    profileId: createdProfile.id,
+    userId: createdProfile.user_id,
+    userName: createdProfile.user_name,
+    avatarUrl: createdProfile.avatar_url,
+  };
 };
 
-export const getProfile = async () => {
-  const userData = await getUser();
+// 取得
+export const getProfileService = async (): Promise<Profile> => {
+  const user = await getUserService();
 
-  const profileData = await selectProfileByUserId(userData.id);
+  const profile = await getProfileRepository(user.id);
 
-  if (!profileData) {
+  if (!profile) {
     throw new Error("プロフィールの取得に失敗しました");
   }
 
-  return profileData;
+  return {
+    profileId: profile.id,
+    userId: profile.user_id,
+    userName: profile.user_name,
+    avatarUrl: profile.avatar_url,
+  };
 };

@@ -1,3 +1,4 @@
+import "server-only";
 import { UpdateTag } from "@/types/format";
 import { CreateTagFormType } from "@/types/zod-schema";
 import { createClient } from "@/utils/supabase/server";

@@ -5,15 +5,15 @@ import {
 import DropdownContent from "@/components/layout/header/user-icon/dropdown-content";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserRound } from "lucide-react";
-import { getProfile } from "@/services/profilesService";
 import { twMerge } from "tailwind-merge";
+import { getProfileService } from "@/services/profilesService";
 
 type Props = {
   className?: string;
 };
 
 export default async function UserIcon({ className = "" }: Props) {
-  const profileData = await getProfile();
+  const profile = await getProfileService();
 
   return (
     <DropdownMenu modal={false}>
@@ -24,7 +24,7 @@ export default async function UserIcon({ className = "" }: Props) {
             className,
           )}
         >
-          <AvatarImage src={profileData.avatar_url ?? ""} alt="avatar" />
+          <AvatarImage src={profile.avatarUrl ?? ""} alt="avatar" />
           <AvatarFallback className="bg-card">
             <UserRound />
           </AvatarFallback>

@@ -2,10 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Tags } from "lucide-react";
 import Link from "next/link";
 import UserIcon from "./user-icon/user-icon";
-import { isAuthenticated } from "@/services/usersService";
+import { getAuthStateService } from "@/services/usersService";
 
 export default async function Header() {
-  const isAuth = await isAuthenticated();
+  const isAuth = await getAuthStateService();
 
   return (
     <header className="relative flex w-full items-center gap-4 border-b bg-card px-2 py-1 shadow-sm">

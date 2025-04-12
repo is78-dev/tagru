@@ -4,12 +4,11 @@ import { inter, notoSansJP } from "@/styles/font";
 import Header from "@/components/layout/header/header";
 import { Toaster } from "@/components/ui/toaster";
 import { AllTagsContext } from "@/context/all-tags-context";
-import { CurrentContentContext } from "@/context/current-content-context";
 
 export const metadata: Metadata = {
   title: "Tagru",
   description:
-    "Tagruは動画などweb上のお気に入りのコンテンツをタグ付けして管理するサービスです。",
+    "TagruはYouTube上の動画にタグをつけて管理できるオンラインサービスです。動画ごとのメモや、タグの階層化により、自分だけの動画データベースを作成できます。",
 };
 
 export default function RootLayout({
@@ -23,15 +22,13 @@ export default function RootLayout({
         className={`${inter.variable} ${notoSansJP.variable} overflow-hidden antialiased`}
       >
         <AllTagsContext>
-          <CurrentContentContext>
-            <div className="flex h-dvh flex-col">
-              <Header />
-              <main className="grow overflow-auto px-4 md:px-10 2xl:px-20">
-                {children}
-              </main>
-              <Toaster />
-            </div>
-          </CurrentContentContext>
+          <div className="flex h-dvh flex-col">
+            <Header />
+            <main className="grow overflow-auto px-4 py-6 md:px-10 2xl:px-20">
+              {children}
+            </main>
+            <Toaster />
+          </div>
         </AllTagsContext>
       </body>
     </html>

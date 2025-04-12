@@ -1,4 +1,4 @@
-import { GoogleLoginButton } from "@/app/login/google-login-button";
+import { GoogleLoginButton } from "@/app/login/_components/google-login-button";
 
 export default function Page() {
   return (

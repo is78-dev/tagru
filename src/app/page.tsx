@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, FolderTree, NotebookPen, Tag } from "lucide-react";
+import { ArrowRight, Network, NotebookPen, Tag } from "lucide-react";
 import Link from "next/link";
 
 export default function Page() {
   return (
-    <div className="mx-auto py-6">
-      <section className="flex flex-col items-center py-40">
+    <div>
+      <section className="flex flex-col items-center py-16 sm:py-40">
         <h1 className="mb-3 text-4xl font-extrabold">Organize with tags.</h1>
         <p className="mb-8 text-muted-foreground">
           TagruはYouTube上の動画にタグをつけて管理できるオンラインサービスです。
@@ -21,7 +21,7 @@ export default function Page() {
       </section>
 
       <section className="flex flex-wrap justify-center gap-10">
-        <div className="w-64">
+        <div className="w-80 rounded-md border bg-card p-6 shadow-sm">
           <h2 className="mb-2 text-xl font-bold">
             <Tag className="mr-2 inline-block size-5" />
             タグで分類
@@ -32,7 +32,7 @@ export default function Page() {
             自分だけのルールで分類できます。
           </p>
         </div>
-        <div className="w-64">
+        <div className="w-80 rounded-md border bg-card p-6 shadow-sm">
           <h2 className="mb-2 text-xl font-bold">
             <NotebookPen className="mr-2 inline-block size-5" />
             メモを残せる
@@ -43,9 +43,9 @@ export default function Page() {
             内容を補足できます。
           </p>
         </div>
-        <div className="w-64">
+        <div className="w-80 rounded-md border bg-card p-6 shadow-sm">
           <h2 className="mb-2 text-xl font-bold">
-            <FolderTree className="mr-2 inline-block size-5" />
+            <Network className="mr-2 inline-block size-5" />
             親子タグで階層管理
           </h2>
           <p className="text-muted-foreground">

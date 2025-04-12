@@ -1,3 +1,10 @@
+export type Profile = {
+  profileId: string;
+  userId: string;
+  userName: string;
+  avatarUrl: string | null;
+};
+
 export type Tag = {
   tagId: string;
   tagName: string;
