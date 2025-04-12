@@ -11,7 +11,7 @@ import {
   updateParentTagRepository,
   updateChildTagRepository,
 } from "@/repositories/tagsRepository";
-import { getUser } from "./usersService";
+import { getUserService } from "./usersService";
 import { Tag, UpdateTag } from "@/types/format";
 import { CreateTagFormType } from "@/types/zod-schema";
 
@@ -19,7 +19,7 @@ import { CreateTagFormType } from "@/types/zod-schema";
 export const createTagService = async (
   createTag: CreateTagFormType,
 ): Promise<Tag> => {
-  const userData = await getUser();
+  const userData = await getUserService();
 
   const tagData = await getTagByTagName(createTag.tagName);
 
@@ -164,7 +164,7 @@ export const updateParentTagService = async (
   tagId: string,
   parentTagIds: string[],
 ) => {
-  const user = await getUser();
+  const user = await getUserService();
 
   const data = await updateParentTagRepository(user.id, tagId, parentTagIds);
 
@@ -180,7 +180,7 @@ export const updateChildTagService = async (
   tagId: string,
   childTagIds: string[],
 ) => {
-  const user = await getUser();
+  const user = await getUserService();
 
   const data = await updateChildTagRepository(user.id, tagId, childTagIds);
 

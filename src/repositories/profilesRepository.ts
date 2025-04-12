@@ -2,7 +2,8 @@ import "server-only";
 import { createClient } from "@/utils/supabase/server";
 import { cache } from "react";
 
-export const insertProfile = cache(
+// 作成
+export const createProfileRepository = cache(
   async (userId: string, userName: string, avatarUrl: string) => {
     const supabase = await createClient();
 
@@ -17,7 +18,7 @@ export const insertProfile = cache(
       .single();
 
     if (error) {
-      console.log("[error] insertProfile: ", error.message);
+      console.log("[error] createProfileReository: ", error.message);
       return null;
     }
 
@@ -25,7 +26,8 @@ export const insertProfile = cache(
   },
 );
 
-export const selectProfileByUserId = cache(async (userId: string) => {
+// 取得
+export const getProfileRepository = cache(async (userId: string) => {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -35,7 +37,7 @@ export const selectProfileByUserId = cache(async (userId: string) => {
     .single();
 
   if (error) {
-    console.log("[error] selectProfileByUserId: ", error.message);
+    console.log("[error] getProfileRepository: ", error.message);
     return null;
   }
 

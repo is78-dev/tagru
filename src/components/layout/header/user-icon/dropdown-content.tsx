@@ -1,5 +1,5 @@
 "use client";
-import { logout } from "@/actions/authAction";
+import { logoutAction } from "@/actions/authAction";
 import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -19,7 +19,7 @@ export default function DropdownContent() {
           <Settings />
           <span>設定</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={logout}>
+        <DropdownMenuItem onClick={logoutAction}>
           <LogOut />
           <span>ログアウト</span>
         </DropdownMenuItem>

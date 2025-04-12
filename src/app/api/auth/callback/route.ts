@@ -1,30 +1,12 @@
-import { registerProfile } from "@/services/profilesService";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
+import { loginService } from "@/services/authService";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
 
   if (!code) {
-    redirect("/error");
+    throw new Error("認証コードが存在しません");
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.exchangeCodeForSession(code);
-
-  if (!user) {
-    redirect("/error");
-  }
-
-  try {
-    await registerProfile();
-  } catch {
-    await supabase.auth.signOut();
-    redirect("/error");
-  }
-
-  redirect("/home");
+  await loginService(code);
 }

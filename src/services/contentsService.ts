@@ -7,7 +7,7 @@ import {
   getContentListRepository,
 } from "@/repositories/contentsRepository";
 import { Content, Tag } from "@/types/format";
-import { getUser } from "./usersService";
+import { getUserService } from "./usersService";
 import { extractYoutubeVideoId } from "@/utils/common/extractYoutubeVideoId";
 import { UpdateContentFormType } from "@/types/zod-schema";
 
@@ -71,7 +71,7 @@ export const createYoutubeContent = async (
   const standardSrcUrl = `https://www.youtube.com/watch?v=${videoId}`;
   const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
   const contentUrl = `https://www.youtube-nocookie.com/embed/${videoId}`;
-  const userId = (await getUser()).id;
+  const userId = (await getUserService()).id;
   const type = "youtube";
   const note = "";
   const tagIds = tags.map((tag) => tag.tagId);
@@ -130,7 +130,7 @@ export const updateContent = async (
   const standardSrcUrl = `https://www.youtube.com/watch?v=${videoId}`;
   const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
   const contentUrl = `https://www.youtube-nocookie.com/embed/${videoId}`;
-  const userId = (await getUser()).id;
+  const userId = (await getUserService()).id;
   const type = "youtube";
   const tagIds = data.tags.map((tag) => tag.tagId);
 
