@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Tags } from "lucide-react";
+import { Tag } from "lucide-react";
 import Link from "next/link";
 import UserIcon from "./user-icon/user-icon";
 import { getAuthStateService } from "@/services/usersService";
@@ -11,7 +11,7 @@ export default async function Header() {
     <header className="relative flex w-full items-center gap-4 border-b bg-card px-2 py-1 shadow-sm">
       <Button asChild size="sm" variant="ghost" className="text-lg font-bold">
         <Link href="/" prefetch={false}>
-          <Tags size={24} />
+          <Tag className="size-4 stroke-[3]" />
           <span>Tagru</span>
         </Link>
       </Button>
