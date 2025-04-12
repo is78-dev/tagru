@@ -37,7 +37,7 @@ export default async function Page({ searchParams }: PageProps) {
   const currentTag = tagId ? await getTagService(tagId) : undefined;
 
   return (
-    <div className="flex flex-col gap-6 py-6">
+    <div className="flex flex-col gap-6">
       {/* コンテンツ */}
       <div className="flex flex-col gap-6 xl:flex-row">
         {/* コンテンツ本体 */}

@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <div className="">
+    <div>
       <section className="flex flex-col items-center py-16 sm:py-40">
         <h1 className="mb-3 text-4xl font-extrabold">Organize with tags.</h1>
         <p className="mb-8 text-muted-foreground">

@@ -13,7 +13,7 @@ export default async function Page() {
   });
 
   return (
-    <div className="py-6">
+    <div>
       <Tabs defaultValue="content">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <TabsList>

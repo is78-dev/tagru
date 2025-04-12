@@ -36,7 +36,7 @@ export default async function Page({ searchParams }: Props) {
 
   return (
     <CurrentTagContext tagId={tagId}>
-      <div className="flex flex-col gap-6 py-6">
+      <div className="flex flex-col gap-6">
         <TagHeader
           initialTag={tag}
           initialParentTags={parentTags}
