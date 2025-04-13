@@ -21,7 +21,6 @@ export const createTagRepository = cache(
       .single();
 
     if (error) {
-      console.error("[error] ", error.message);
       return null;
     }
 
@@ -40,7 +39,6 @@ export const getTagRepository = cache(async (tagId: string) => {
     .single();
 
   if (error) {
-    console.log("[error] ", error.message);
     return null;
   }
 
@@ -58,7 +56,6 @@ export const getTagByTagName = cache(async (tagName: string) => {
     .single();
 
   if (error) {
-    console.log("[error] ", error.message);
     return null;
   }
 
@@ -85,7 +82,6 @@ export const getTagListRepository = cache(
         .range(range.offset, range.offset + range.limit - 1);
 
       if (error) {
-        console.log("[error] ", error.message);
         return null;
       }
 
@@ -97,7 +93,6 @@ export const getTagListRepository = cache(
         .order("created_at", { ascending: false });
 
       if (error) {
-        console.log("[error] ", error.message);
         return null;
       }
 
@@ -116,7 +111,6 @@ export const getContentTagListRepository = cache(async (contentId: string) => {
     .eq("content_id", contentId);
 
   if (contentTagIdsError) {
-    console.log("[error] ", contentTagIdsError.message);
     return null;
   }
 
@@ -128,7 +122,6 @@ export const getContentTagListRepository = cache(async (contentId: string) => {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.log("[error] ", error.message);
     return null;
   }
 
@@ -145,7 +138,6 @@ export const getParentTagListRepository = cache(async (tagId: string) => {
     .eq("child_tag_id", tagId);
 
   if (parentTagIdsError) {
-    console.log("[error] ", parentTagIdsError.message);
     return null;
   }
 
@@ -159,7 +151,6 @@ export const getParentTagListRepository = cache(async (tagId: string) => {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.log("[error] ", error.message);
     return null;
   }
 
@@ -176,7 +167,6 @@ export const getChildTagListRepository = cache(async (tagId: string) => {
     .eq("parent_tag_id", tagId);
 
   if (childTagIdsError) {
-    console.log("[error] ", childTagIdsError.message);
     return null;
   }
 
@@ -188,7 +178,6 @@ export const getChildTagListRepository = cache(async (tagId: string) => {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.log("[error] ", error.message);
     return null;
   }
 
@@ -212,7 +201,6 @@ export const updateTagRepository = cache(
       .single();
 
     if (error) {
-      console.log("[error] ", error.message);
       return null;
     }
 
@@ -231,7 +219,6 @@ export const updateParentTagRepository = cache(
       .eq("child_tag_id", tagId);
 
     if (deleteError) {
-      console.log("[error] ", deleteError.message);
       return null;
     }
 
@@ -246,7 +233,6 @@ export const updateParentTagRepository = cache(
       .select();
 
     if (error) {
-      console.log("[error] ", error.message);
       return null;
     }
 
@@ -265,7 +251,6 @@ export const updateChildTagRepository = cache(
       .eq("parent_tag_id", tagId);
 
     if (deleteError) {
-      console.log("[error] ", deleteError.message);
       return null;
     }
 
@@ -280,7 +265,6 @@ export const updateChildTagRepository = cache(
       .select();
 
     if (error) {
-      console.log("[error] ", error.message);
       return null;
     }
 
@@ -295,7 +279,6 @@ export const deleteTagRepository = cache(async (tagId: string) => {
   const { error } = await supabase.from("tags").delete().eq("id", tagId);
 
   if (error) {
-    console.log("[error] ", error.message);
     return null;
   }
 

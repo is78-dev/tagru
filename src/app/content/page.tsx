@@ -11,7 +11,7 @@ import {
 } from "@/services/tagsService";
 import InfinityContentList from "@/components/element/infinity-content-list/infinity-content-list";
 import ContentCreateDialog from "@/components/element/content-create-dialog/content-create-dialog";
-import ContentInfo from "./content-info/content-info";
+import ContentInfo from "./_components/content-info";
 import { Tag } from "lucide-react";
 import { CurrentContentContext } from "@/context/current-content-context";
 
@@ -27,7 +27,7 @@ export default async function Page({ searchParams }: PageProps) {
   const contentPromise = getContentService(contentId);
   const tagsPromise = getContentTagListService(contentId);
   const initialContentsPromise = getContentListService({
-    range: { offset: 0, limit: 30 },
+    range: { offset: 0, limit: 20 },
     tagId,
   });
   const [content, tags, initialContents] = await Promise.all([
@@ -83,7 +83,7 @@ export default async function Page({ searchParams }: PageProps) {
           </div>
           <InfinityContentList
             initialContents={initialContents}
-            chunkSize={30}
+            chunkSize={10}
             currentContentId={content.contentId}
             currentTagId={currentTag?.tagId}
           />

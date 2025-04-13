@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import TagHeader from "./tag-header";
+import TagHeader from "./_components/tag-header";
 import { getContentListService } from "@/services/contentsService";
 
 import InfinityContentList from "@/components/element/infinity-content-list/infinity-content-list";
@@ -24,7 +24,7 @@ export default async function Page({ searchParams }: Props) {
   const parentTagsPromise = getParentTagListService(tagId);
   const childTagsPromise = getChildTagListService(tagId);
   const initialContentsPromise = getContentListService({
-    range: { offset: 0, limit: 30 },
+    range: { offset: 0, limit: 10 },
     tagId,
   });
   const [tag, parentTags, childTags, initialContents] = await Promise.all([
@@ -46,7 +46,7 @@ export default async function Page({ searchParams }: Props) {
         <InfinityContentList
           key={tagId}
           initialContents={initialContents}
-          chunkSize={30}
+          chunkSize={10}
           currentTagId={tag.tagId}
         >
           <ContentCreateDialog initialTags={[tag]}>
