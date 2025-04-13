@@ -14,7 +14,6 @@ export const getLoginUrlRepository = cache(async () => {
   });
 
   if (error) {
-    console.error("[error] getLoginUrlRepository: ", error.message);
     return null;
   }
 
@@ -28,7 +27,6 @@ export const loginRepository = cache(async (code: string) => {
   const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error) {
-    console.error("[error] loginRepository: ", error.message);
     return null;
   }
 
@@ -42,7 +40,6 @@ export const logoutRepository = cache(async () => {
   const { error } = await supabase.auth.signOut();
 
   if (error) {
-    console.log("[error] logoutRepository: ", error.message);
     return false;
   }
 

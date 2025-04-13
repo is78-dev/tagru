@@ -18,7 +18,6 @@ export const createProfileRepository = cache(
       .single();
 
     if (error) {
-      console.log("[error] createProfileReository: ", error.message);
       return null;
     }
 
@@ -37,7 +36,6 @@ export const getProfileRepository = cache(async (userId: string) => {
     .single();
 
   if (error) {
-    console.log("[error] getProfileRepository: ", error.message);
     return null;
   }
 

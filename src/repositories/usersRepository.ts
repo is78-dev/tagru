@@ -9,7 +9,6 @@ export const getUserRepository = cache(async () => {
   const { data, error } = await supabase.auth.getUser();
 
   if (error) {
-    console.log("[error] getUserRepository: ", error.message);
     return null;
   }
 
