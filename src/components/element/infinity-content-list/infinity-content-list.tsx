@@ -47,8 +47,18 @@ export default function InfinityContentList({
           disabled={content.contentId === currentContentId}
         />
       ))}
+      {loading &&
+        Array.from({ length: chunkSize }).map((_, index) => (
+          <div className="flex w-full flex-col gap-2" key={index}>
+            <div
+              key={index}
+              className="aspect-video w-full animate-pulse rounded-md bg-muted"
+            ></div>
+            <div className="h-5 animate-pulse rounded-md bg-muted"></div>
+          </div>
+        ))}
       {!loading && hasMore && (
-        <div ref={targetRef} className="-mt-[100dvh] opacity-0"></div>
+        <div ref={targetRef} className="-mt-[20dvh] opacity-0"></div>
       )}
     </div>
   );

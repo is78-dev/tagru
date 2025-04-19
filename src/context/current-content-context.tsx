@@ -2,7 +2,7 @@
 
 import { getContentAction } from "@/actions/contentAction";
 import { getContentTagListAction } from "@/actions/tagAction";
-import { toast } from "@/hooks/use-toast";
+import { useClientError } from "@/hooks/use-client-error";
 import { Content, Tag } from "@/types/format";
 import {
   ReactNode,
@@ -12,53 +12,65 @@ import {
   useState,
 } from "react";
 
+// TODO: コンテキストを分割して部分的な更新を可能にする
 type ContextType = {
   currentContent: Content | null;
   currentContentTags: Tag[] | null;
+  resetCurrentContent: () => void;
   refreshCurrentContent: (contentId: string) => Promise<void>;
   loading: boolean;
 };
 
 const Context = createContext<ContextType>({} as ContextType);
 
-export function CurrentContentContext({ children }: { children: ReactNode }) {
+export function CurrentContentContext({
+  contentId,
+  children,
+}: {
+  contentId: string;
+  children: ReactNode;
+}) {
   const [currentContent, setCurrentContent] = useState<Content | null>(null);
   const [currentContentTags, setCurrentContentTags] = useState<Tag[] | null>(
     null,
   );
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const { clientErrorHandler } = useClientError();
+
+  const resetCurrentContent = () => {
+    setCurrentContent(null);
+    setCurrentContentTags(null);
+  };
 
   const refreshCurrentContent = async (contentId: string) => {
     try {
       setLoading(true);
-      const contentData = await getContentAction(contentId);
-      const contentTagsData = await getContentTagListAction(contentId);
+      const contentDataPromise = getContentAction(contentId);
+      const contentTagsDataPromise = getContentTagListAction(contentId);
+      const [contentData, contentTagsData] = await Promise.all([
+        contentDataPromise,
+        contentTagsDataPromise,
+      ]);
       setCurrentContent(contentData);
       setCurrentContentTags(contentTagsData);
     } catch (error) {
-      if (error instanceof Error) {
-        toast({
-          variant: "destructive",
-          title: "エラー",
-          description: error.message,
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "エラー",
-          description: "予期せぬエラーが発生しました",
-        });
-      }
+      clientErrorHandler(error);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    resetCurrentContent();
+    refreshCurrentContent(contentId);
+  }, [contentId]);
 
   return (
     <Context
       value={{
         currentContent,
         currentContentTags,
+        resetCurrentContent,
         refreshCurrentContent,
         loading,
       }}
@@ -68,12 +80,4 @@ export function CurrentContentContext({ children }: { children: ReactNode }) {
   );
 }
 
-export const useCurrentContent = (contentId: string) => {
-  const context = useContext(Context);
-
-  useEffect(() => {
-    context.refreshCurrentContent(contentId);
-  }, [contentId]);
-
-  return context;
-};
+export const useCurrentContent = () => useContext(Context);

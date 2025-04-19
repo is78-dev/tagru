@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import TagCreateDialog from "@/components/element/tag-create-dialog/tag-create-dialog";
 import InfinityContentList from "@/components/element/infinity-content-list/infinity-content-list";
 import { getContentListService } from "@/services/contentsService";
-import AllTagList from "./all-tag-list";
+import AllTagList from "./_components/all-tag-list";
 import TagSearchNavigator from "@/components/layout/header/tag-search-navigator/tag-search-navigator";
 
 export default async function Page() {
   const initialContents = await getContentListService({
-    range: { offset: 0, limit: 30 },
+    range: { offset: 0, limit: 20 },
   });
 
   return (
@@ -40,7 +40,7 @@ export default async function Page() {
         <TabsContent value="content" className="mt-4">
           <InfinityContentList
             initialContents={initialContents}
-            chunkSize={30}
+            chunkSize={10}
           />
         </TabsContent>
         <TabsContent value="tag" className="mt-4">

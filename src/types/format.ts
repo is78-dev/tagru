@@ -39,3 +39,11 @@ export type Content = {
   thumbnailUrl: string;
   contentUrl: string;
 };
+
+export type UpdateContent = {
+  title?: string;
+  note?: string;
+  srcUrl?: string;
+  thumbnailUrl?: string;
+  contentUrl?: string;
+};
