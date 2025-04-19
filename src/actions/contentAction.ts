@@ -2,11 +2,11 @@
 
 import {
   createYoutubeContent,
-  deleteContent,
+  deleteContentService,
   getContentListService,
   getContentService,
-  updateContent,
-  updateContentNote,
+  updateContentNoteService,
+  updateContentService,
 } from "@/services/contentsService";
 import {
   createContentFormSchema,
@@ -14,6 +14,7 @@ import {
 } from "@/types/zod-schema";
 import { z } from "zod";
 
+// 作成
 export const createYoutubeContentAction = async (
   data: z.infer<typeof createContentFormSchema>,
 ) => {
@@ -26,36 +27,6 @@ export const createYoutubeContentAction = async (
   // コンテンツ追加処理
   await createYoutubeContent(data.srcUrl, data.title, data.tags);
 };
-
-export const updateContentNoteAction = async (
-  contentId: string,
-  noteText: string,
-) => {
-  const updatedContentData = await updateContentNote(contentId, noteText);
-  return updatedContentData;
-};
-
-// コンテンツを更新
-export const updateContentAction = async (
-  contentId: string,
-  data: UpdateContentFormType,
-) => {
-  const result = createContentFormSchema.safeParse(data);
-
-  if (!result.success) {
-    throw new Error("入力の形式が正しくありません");
-  }
-
-  const updatedContentData = await updateContent(contentId, data);
-  return updatedContentData;
-};
-
-// コンテンツを削除
-export const deleteContentAction = async (contentId: string) => {
-  await deleteContent(contentId);
-};
-
-// --------
 
 // 取得
 export const getContentAction = async (contentId: string) => {
@@ -73,4 +44,33 @@ export const getContentsAction = async ({
 }) => {
   const data = await getContentListService({ range, tagId });
   return data;
+};
+
+// 更新
+export const updateContentAction = async (
+  contentId: string,
+  data: UpdateContentFormType,
+) => {
+  const result = createContentFormSchema.safeParse(data);
+
+  if (!result.success) {
+    throw new Error("入力の形式が正しくありません");
+  }
+
+  const updatedContentData = await updateContentService(contentId, data);
+  return updatedContentData;
+};
+
+// メモの更新
+export const updateContentNoteAction = async (
+  contentId: string,
+  note: string,
+) => {
+  const updatedContentData = await updateContentNoteService(contentId, note);
+  return updatedContentData;
+};
+
+// 削除
+export const deleteContentAction = async (contentId: string) => {
+  await deleteContentService(contentId);
 };

@@ -272,6 +272,38 @@ export const updateChildTagRepository = cache(
   },
 );
 
+// コンテンツが持つタグを更新
+export const updateContentTagRepository = cache(
+  async (userId: string, contentId: string, tagIds: string[]) => {
+    const supabase = await createClient();
+
+    const { error: deleteError } = await supabase
+      .from("content_tags")
+      .delete()
+      .eq("content_id", contentId);
+
+    if (deleteError) {
+      return null;
+    }
+
+    const newRelations = tagIds.map((tagId) => ({
+      user_id: userId,
+      content_id: contentId,
+      tag_id: tagId,
+    }));
+    const { data, error } = await supabase
+      .from("content_tags")
+      .insert(newRelations)
+      .select();
+
+    if (error) {
+      return null;
+    }
+
+    return data;
+  },
+);
+
 // 削除
 export const deleteTagRepository = cache(async (tagId: string) => {
   const supabase = await createClient();

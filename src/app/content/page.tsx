@@ -5,10 +5,7 @@ import {
   getContentListService,
   getContentService,
 } from "@/services/contentsService";
-import {
-  getContentTagListService,
-  getTagService,
-} from "@/services/tagsService";
+import { getTagService } from "@/services/tagsService";
 import InfinityContentList from "@/components/element/infinity-content-list/infinity-content-list";
 import ContentCreateDialog from "@/components/element/content-create-dialog/content-create-dialog";
 import ContentInfo from "./_components/content-info";
@@ -25,38 +22,33 @@ export default async function Page({ searchParams }: PageProps) {
   if (!(typeof tagId === "string" || typeof tagId === "undefined")) notFound();
 
   const contentPromise = getContentService(contentId);
-  const tagsPromise = getContentTagListService(contentId);
   const initialContentsPromise = getContentListService({
     range: { offset: 0, limit: 20 },
     tagId,
   });
-  const [content, tags, initialContents] = await Promise.all([
+  const [content, initialContents] = await Promise.all([
     contentPromise,
-    tagsPromise,
     initialContentsPromise,
   ]);
   const currentTag = tagId ? await getTagService(tagId) : undefined;
 
   return (
-    <CurrentContentContext>
+    <CurrentContentContext contentId={contentId}>
       <div className="flex flex-col gap-6">
         {/* コンテンツ */}
         <div className="flex flex-col gap-6 xl:flex-row">
           {/* コンテンツ本体 */}
           <div className="aspect-video w-full overflow-hidden rounded-md outline outline-1 outline-border">
             <iframe
-              key={content.contentId}
               src={content.contentUrl + "?rel=0"}
               className="size-full"
               allowFullScreen
             ></iframe>
           </div>
           {/* コンテンツ情報 */}
-          <div className="relative h-[50dvh] grow p-2 xl:h-auto xl:min-w-[25%]">
+          <div className="relative h-[400px] grow p-2 xl:h-auto xl:min-w-[25%]">
             <ContentInfo
-              key={content.contentId}
-              content={content}
-              tags={tags}
+              contentId={contentId}
               currentTag={currentTag}
               className="absolute inset-0"
             />

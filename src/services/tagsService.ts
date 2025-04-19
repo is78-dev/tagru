@@ -10,6 +10,7 @@ import {
   deleteTagRepository,
   updateParentTagRepository,
   updateChildTagRepository,
+  updateContentTagRepository,
 } from "@/repositories/tagsRepository";
 import { getUserService } from "./usersService";
 import { Tag, UpdateTag } from "@/types/format";
@@ -186,6 +187,22 @@ export const updateChildTagService = async (
 
   if (!data) {
     throw new Error("子タグの更新に失敗しました");
+  }
+
+  return;
+};
+
+// コンテンツが持つタグを更新
+export const updateContentTagService = async (
+  contentId: string,
+  tagIds: string[],
+) => {
+  const user = await getUserService();
+
+  const data = await updateContentTagRepository(user.id, contentId, tagIds);
+
+  if (!data) {
+    throw new Error("コンテンツタグの更新に失敗しました");
   }
 
   return;

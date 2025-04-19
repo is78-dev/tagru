@@ -11,7 +11,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useToast } from "@/hooks/use-toast";
+import { useClientError } from "@/hooks/use-client-error";
+import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
 
@@ -26,9 +27,9 @@ export default function ContentDeleteDialog({
   redirectUrl,
   children,
 }: Props) {
-  const { toast } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const { clientErrorHandler } = useClientError();
 
   const handleDelete = async (contentId: string) => {
     try {
@@ -40,19 +41,7 @@ export default function ContentDeleteDialog({
       });
       router.push(redirectUrl);
     } catch (error) {
-      if (error instanceof Error) {
-        toast({
-          variant: "destructive",
-          title: "エラー",
-          description: error.message,
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "エラー",
-          description: "予期せぬエラーが発生しました",
-        });
-      }
+      clientErrorHandler(error);
     } finally {
       setLoading(false);
     }
